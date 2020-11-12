@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: e992d3cd035325247a9d6075937cc83d
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: ON Worinseokbo
+  fontNames:
+  - ON Worinseokbo
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a2741eed59283ed40977ca03fb3ac840, type: 3}
+  - {fileID: 12800000, guid: c541c1fe7a2753f47998953b7cb77681, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
