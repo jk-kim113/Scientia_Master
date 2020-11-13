@@ -42,25 +42,25 @@ public class ResourcePoolManager : TSingleton<ResourcePoolManager>
         return null;
     }
 
-    //void LoadData<T>(eResourceKind kind, eTableType type) where T : class
-    //{
-    //    Dictionary<string, object> tempDic = new Dictionary<string, object>();
+    void LoadData<T>(eResourceKind kind, eTableType type) where T : class
+    {
+        Dictionary<string, object> tempDic = new Dictionary<string, object>();
 
-    //    TableBase tb = TableManager._instance.Get(type);
+        TableBase tb = TableManager._instance.Get(type);
 
-    //    foreach (string key in tb._datas.Keys)
-    //    {
-    //        object obj = Resources.Load(tb._datas[key]["Location"], typeof(T));
-    //        T temp = (T)Convert.ChangeType(obj, typeof(T));
-    //        tempDic.Add(tb._datas[key]["Name"], temp);
-    //    }
+        foreach (string key in tb._datas.Keys)
+        {
+            object obj = Resources.Load(tb._datas[key]["Location"], typeof(T));
+            T temp = (T)Convert.ChangeType(obj, typeof(T));
+            tempDic.Add(tb._datas[key]["Name"], temp);
+        }
 
-    //    _resourceData.Add(kind, tempDic);
-    //}
+        _resourceData.Add(kind, tempDic);
+    }
 
     public void ResourceAllLoad()
     {
         //LoadData<Sprite>(eResourceKind.Image, eTableType.ImageData);
-        //LoadData<GameObject>(eResourceKind.Prefab, eTableType.PrefabData);
+        LoadData<GameObject>(eResourceKind.Prefab, eTableType.PrefabData);
     }
 }

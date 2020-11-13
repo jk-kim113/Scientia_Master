@@ -109,20 +109,37 @@ public class ClientManager : TSingleton<ClientManager>
 
     public void LogIn(string id, string pw)
     {
-        DefinedStructure.P_LogInTry pLogInTry;
+        DefinedStructure.P_Send_ID_Pw pLogInTry;
         pLogInTry._id = id;
         pLogInTry._pw = pw;
 
         ToPacket(DefinedProtocol.eFromClient.LogInTry, pLogInTry);
     }
 
+    public void OverlapCheck(string target)
+    {
+        DefinedStructure.P_OverlapCheck pOverlapCheck;
+        pOverlapCheck._target = target;
+
+        ToPacket(DefinedProtocol.eFromClient.OverlapCheck_ID, pOverlapCheck);
+    }
+
+    public void EnrollTry(string id, string pw)
+    {
+        DefinedStructure.P_Send_ID_Pw pEnrollTry;
+        pEnrollTry._id = id;
+        pEnrollTry._pw = pw;
+
+        ToPacket(DefinedProtocol.eFromClient.EnrollTry, pEnrollTry);
+    }
+
     void ToPacket(DefinedProtocol.eFromClient fromClientID, object str)
     {
-        DefinedStructure.PacketInfo packetRecieve1;
-        packetRecieve1._id = (int)fromClientID;
-        packetRecieve1._data = ConvertPacket.StructureToByteArray(str);
-        packetRecieve1._totalSize = packetRecieve1._data.Length;
+        DefinedStructure.PacketInfo packetRecieve;
+        packetRecieve._id = (int)fromClientID;
+        packetRecieve._data = ConvertPacket.StructureToByteArray(str);
+        packetRecieve._totalSize = packetRecieve._data.Length;
 
-        _fromClientQueue.Enqueue(ConvertPacket.StructureToByteArray(packetRecieve1));
+        _fromClientQueue.Enqueue(ConvertPacket.StructureToByteArray(packetRecieve));
     }
 }

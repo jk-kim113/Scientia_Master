@@ -7,6 +7,8 @@ public class DefinedProtocol
     public enum eFromClient
     {
         LogInTry,
+        OverlapCheck_ID,
+        EnrollTry,
 
         max
     }

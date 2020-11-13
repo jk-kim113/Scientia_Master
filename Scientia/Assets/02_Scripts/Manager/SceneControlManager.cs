@@ -27,13 +27,9 @@ public class SceneControlManager : TSingleton<SceneControlManager>
     eTypeScene _prevScene;
     eStateLoadding _loadState;
 
-    GameObject _prefabLoadingWnd;
-
     protected override void Init()
     {
         base.Init();
-
-        _prefabLoadingWnd = Resources.Load("Prefab/UI/LoadingWindow") as GameObject;
     }
 
     private void Update()
@@ -48,8 +44,7 @@ public class SceneControlManager : TSingleton<SceneControlManager>
     IEnumerator LoadingPrecess(string sceneName)
     {
         _loadState = eStateLoadding.Load;
-        GameObject go = Instantiate(_prefabLoadingWnd, transform);
-        LoadingWindow wnd = go.GetComponent<LoadingWindow>();
+        LoadingWindow wnd = UIManager._instance.OpenWnd<LoadingWindow>(UIManager.eKindWindow.LoadingUI);
         wnd.OpenLoadingWnd();
 
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
@@ -64,7 +59,7 @@ public class SceneControlManager : TSingleton<SceneControlManager>
         yield return new WaitForSeconds(1.8f);
 
         _loadState = eStateLoadding.LoadingDone;
-        Destroy(wnd.gameObject);
+        UIManager._instance.Close(UIManager.eKindWindow.LoadingUI);
         yield return new WaitForSeconds(1f);
         _loadState = eStateLoadding.EndLoad;
     }

@@ -6,8 +6,9 @@ public class StartSceneManager : MonoBehaviour
 {
     void Start()
     {
-        ClientManager._instance.ConnectServer();
-        SceneControlManager._instance.StartLoadLogInScene();
+        //ClientManager._instance.ConnectServer();
+        TableManager._instance.LoadAll();
         ResourcePoolManager._instance.ResourceAllLoad();
+        SceneControlManager._instance.StartLoadLogInScene();
     }
 }

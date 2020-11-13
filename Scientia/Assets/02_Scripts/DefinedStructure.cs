@@ -18,12 +18,19 @@ public class DefinedStructure
 
     #region FromClient
     [StructLayout(LayoutKind.Sequential)]
-    public struct P_LogInTry
+    public struct P_Send_ID_Pw
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _id;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _pw;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_OverlapCheck
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _target;
     }
     #endregion
 }

@@ -5,8 +5,13 @@ using UnityEngine;
 public class UIManager : TSingleton<UIManager>
 {
     public enum eKindWindow
-    {   
+    {
+        CharacterSlotUI,
+        LogInUI,
         EnrollUI,
+        LoadingUI,
+        SelectCharacterUI,
+        SystemMessageUI,
 
         max
     }
