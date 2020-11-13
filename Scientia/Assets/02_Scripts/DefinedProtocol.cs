@@ -9,6 +9,7 @@ public class DefinedProtocol
         LogInTry,
         OverlapCheck_ID,
         EnrollTry,
+        GetMyCharacterInfo,
 
         max
     }
@@ -16,6 +17,10 @@ public class DefinedProtocol
     public enum eToClient
     {
         LogInResult,
+        ResultOverlap_ID,
+        EnrollResult,
+        CharacterInfo,
+        EndCharacterInfo,
 
         max
     }

@@ -32,5 +32,42 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _target;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_Request
+    {
+        
+    }
+    #endregion
+
+    #region ToClient
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ResultLogIn
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _isSuccess;
+        [MarshalAs(UnmanagedType.I8)]
+        public long _UUID;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ResultCheck
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _result;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_CharacterInfo
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _chracIndex;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _accountLevel;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _slotIndex;
+    }
     #endregion
 }

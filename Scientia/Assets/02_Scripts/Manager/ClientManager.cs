@@ -12,6 +12,8 @@ public class ClientManager : TSingleton<ClientManager>
     const string _ip = "127.0.0.1";
     const int _port = 80;
 
+    long _myUUID;
+
     Socket _server;
 
     bool _isConnect = false;
@@ -88,6 +90,70 @@ public class ClientManager : TSingleton<ClientManager>
                 {
                     case DefinedProtocol.eToClient.LogInResult:
 
+                        DefinedStructure.P_ResultLogIn pResultLogIn = new DefinedStructure.P_ResultLogIn();
+                        pResultLogIn = (DefinedStructure.P_ResultLogIn)ConvertPacket.ByteArrayToStructure(pToClient._data, pResultLogIn.GetType(), pToClient._totalSize);
+
+                        if(pResultLogIn._isSuccess == 0)
+                        {
+                            _myUUID = pResultLogIn._UUID;
+                            GetMyCharacterInfo();
+                            UIManager._instance.OpenWnd<SelectCharacterUI>(UIManager.eKindWindow.SelectCharacterUI).SetSortOrder(-1);
+                        }
+                        else
+                        {
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.LogIn_Fail);
+                        }
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ResultOverlap_ID:
+
+                        DefinedStructure.P_ResultCheck pResultOverlap_ID = new DefinedStructure.P_ResultCheck();
+                        pResultOverlap_ID = (DefinedStructure.P_ResultCheck)ConvertPacket.ByteArrayToStructure(pToClient._data, pResultOverlap_ID.GetType(), pToClient._totalSize);
+                        
+                        if(pResultOverlap_ID._result == 0)
+                        {
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.ID_Overlap);
+                        }
+                        else
+                        {
+                            EnrollUI enrollUI = UIManager._instance.GetWnd<EnrollUI>(UIManager.eKindWindow.EnrollUI);
+                            enrollUI._IsCheckOverlap = true;
+                        }
+
+                        break;
+
+                    case DefinedProtocol.eToClient.EnrollResult:
+
+                        DefinedStructure.P_ResultCheck pResultEnroll = new DefinedStructure.P_ResultCheck();
+                        pResultEnroll = (DefinedStructure.P_ResultCheck)ConvertPacket.ByteArrayToStructure(pToClient._data, pResultEnroll.GetType(), pToClient._totalSize);
+
+                        if(pResultEnroll._result == 0)
+                        {
+                            UIManager._instance.Close(UIManager.eKindWindow.EnrollUI);
+                        }
+                        else
+                        {
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Enroll_Fail);
+                        }
+
+                        break;
+
+                    case DefinedProtocol.eToClient.CharacterInfo:
+
+                        DefinedStructure.P_CharacterInfo pCharacterInfo = new DefinedStructure.P_CharacterInfo();
+                        pCharacterInfo = (DefinedStructure.P_CharacterInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pCharacterInfo.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<SelectCharacterUI>(UIManager.eKindWindow.SelectCharacterUI).ShowCharacter(
+                            pCharacterInfo._nickName, pCharacterInfo._chracIndex, pCharacterInfo._accountLevel, pCharacterInfo._slotIndex);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.EndCharacterInfo:
+
+                        UIManager._instance.Close(UIManager.eKindWindow.LogInUI);
+                        UIManager._instance.GetWnd<SelectCharacterUI>(UIManager.eKindWindow.SelectCharacterUI).SetSortOrder(5);
+
                         break;
                 }
             }
@@ -131,6 +197,13 @@ public class ClientManager : TSingleton<ClientManager>
         pEnrollTry._pw = pw;
 
         ToPacket(DefinedProtocol.eFromClient.EnrollTry, pEnrollTry);
+    }
+
+    void GetMyCharacterInfo()
+    {
+        DefinedStructure.P_Request pGetMyChatacInfo;
+
+        ToPacket(DefinedProtocol.eFromClient.GetMyCharacterInfo, pGetMyChatacInfo);
     }
 
     void ToPacket(DefinedProtocol.eFromClient fromClientID, object str)

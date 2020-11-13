@@ -11,6 +11,7 @@ public class EnrollUI : MonoBehaviour
 #pragma warning restore
 
     bool _isCheckOverlap = false;
+    public bool _IsCheckOverlap { set { _isCheckOverlap = value; } }
 
     public void Init()
     {

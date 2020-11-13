@@ -14,6 +14,11 @@ public class CharacterSlotUI : MonoBehaviour
     Text _levelText;
 #pragma warning restore
 
+    public void InitSlot(string nickname, int avartarindex, int accountlevel)
+    {
+        Debug.Log("asd");
+    }
+
     public void SelectCharacter()
     {
 
