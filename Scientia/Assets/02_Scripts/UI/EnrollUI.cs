@@ -25,7 +25,7 @@ public class EnrollUI : MonoBehaviour
         {
             if(CheckRule.IsValidID(_idField.text))
             {
-                ClientManager._instance.OverlapCheck(_idField.text);
+                ClientManager._instance.OverlapCheck_ID(_idField.text);
             }
             else
                 SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.ID_Rule);

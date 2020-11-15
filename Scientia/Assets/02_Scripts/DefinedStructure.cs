@@ -38,6 +38,17 @@ public class DefinedStructure
     {
         
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_CreateCharacter
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _characterIndex;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _slot;
+    }
     #endregion
 
     #region ToClient

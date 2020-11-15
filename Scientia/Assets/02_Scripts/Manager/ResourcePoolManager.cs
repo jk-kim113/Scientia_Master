@@ -60,7 +60,7 @@ public class ResourcePoolManager : TSingleton<ResourcePoolManager>
 
     public void ResourceAllLoad()
     {
-        //LoadData<Sprite>(eResourceKind.Image, eTableType.ImageData);
+        LoadData<Sprite>(eResourceKind.Image, eTableType.ImageData);
         LoadData<GameObject>(eResourceKind.Prefab, eTableType.PrefabData);
     }
 }

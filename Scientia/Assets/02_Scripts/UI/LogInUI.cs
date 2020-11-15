@@ -12,6 +12,16 @@ public class LogInUI : MonoBehaviour
     InputField _pwField;
 #pragma warning restore
 
+    private void Update()
+    {
+        if (_idField.isFocused)
+        {
+            if(TouchScreenKeyboard.isSupported && !TouchScreenKeyboard.visible)
+                TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable);
+        }
+            
+    }
+
     public void LogInButton()
     {
         if (!string.IsNullOrEmpty(_idField.text))

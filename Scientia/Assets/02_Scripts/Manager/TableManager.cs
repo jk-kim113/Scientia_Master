@@ -6,6 +6,9 @@ public enum eTableType
 {
     PrefabData,
     SystemMessageData,
+    ImageData,
+    CharacterData,
+    CharacterExplainData,
 
     max
 }
@@ -41,6 +44,9 @@ public class TableManager : TSingleton<TableManager>
     {
         Load<PrefabData>(eTableType.PrefabData);
         Load<SystemMessageData>(eTableType.SystemMessageData);
+        Load<ImageData>(eTableType.ImageData);
+        Load<CharacterData>(eTableType.CharacterData);
+        Load<CharacterExplainData>(eTableType.CharacterExplainData);
     }
 
     public TableBase Get(eTableType type)

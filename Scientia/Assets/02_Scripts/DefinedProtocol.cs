@@ -8,8 +8,13 @@ public class DefinedProtocol
     {
         LogInTry,
         OverlapCheck_ID,
+        OverlapCheck_NickName,
         EnrollTry,
         GetMyCharacterInfo,
+        CreateCharacter,
+
+
+        ConnectionTerminate,
 
         max
     }
@@ -18,9 +23,11 @@ public class DefinedProtocol
     {
         LogInResult,
         ResultOverlap_ID,
+        ResultOverlap_NickName,
         EnrollResult,
         CharacterInfo,
         EndCharacterInfo,
+        EndCreateCharacter,
 
         max
     }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7312060353577931759}
   - component: {fileID: 7312060353577931757}
   - component: {fileID: 7312060353577931758}
+  - component: {fileID: 1244962577957314607}
   m_Layer: 5
   m_Name: SlotBG
   m_TagString: Untagged
@@ -74,6 +75,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1244962577957314607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7312060353577931752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be4c615f7c1cea409d408090d7fe1d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7312060354178956343
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +135,6 @@ GameObject:
   - component: {fileID: 7312060354595939067}
   - component: {fileID: 7312060354595939060}
   - component: {fileID: 7312060354595939061}
-  - component: {fileID: 7404652875445748139}
   m_Layer: 5
   m_Name: AddButton
   m_TagString: Untagged
@@ -228,7 +240,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7404652875445748139}
+      - m_Target: {fileID: 1244962577957314607}
         m_MethodName: AddButton
         m_Mode: 1
         m_Arguments:
@@ -239,15 +251,3 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7404652875445748139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7312060354595939063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3be4c615f7c1cea409d408090d7fe1d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

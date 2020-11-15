@@ -6,13 +6,11 @@ using System.Net.Sockets;
 
 public class ClientManager : TSingleton<ClientManager>
 {
-    //const string _ip = "1.235.143.68";
-    //const int _port = 100;
+    const string _ip = "1.235.143.68";
+    const int _port = 100;
 
-    const string _ip = "127.0.0.1";
-    const int _port = 80;
-
-    long _myUUID;
+    //const string _ip = "127.0.0.1";
+    //const int _port = 80;
 
     Socket _server;
 
@@ -95,7 +93,6 @@ public class ClientManager : TSingleton<ClientManager>
 
                         if(pResultLogIn._isSuccess == 0)
                         {
-                            _myUUID = pResultLogIn._UUID;
                             GetMyCharacterInfo();
                             UIManager._instance.OpenWnd<SelectCharacterUI>(UIManager.eKindWindow.SelectCharacterUI).SetSortOrder(-1);
                         }
@@ -119,6 +116,24 @@ public class ClientManager : TSingleton<ClientManager>
                         {
                             EnrollUI enrollUI = UIManager._instance.GetWnd<EnrollUI>(UIManager.eKindWindow.EnrollUI);
                             enrollUI._IsCheckOverlap = true;
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.ID_Non_Overlap);
+                        }
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ResultOverlap_NickName:
+
+                        DefinedStructure.P_ResultCheck pResultOverlap_NickName = new DefinedStructure.P_ResultCheck();
+                        pResultOverlap_NickName = (DefinedStructure.P_ResultCheck)ConvertPacket.ByteArrayToStructure(pToClient._data, pResultOverlap_NickName.GetType(), pToClient._totalSize);
+
+                        if(pResultOverlap_NickName._result == 0)
+                        {
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.NickName_Overlap);
+                        }
+                        else
+                        {
+                            CreateCharacterUI createCharacUI = UIManager._instance.GetWnd<CreateCharacterUI>(UIManager.eKindWindow.CreateCharacterUI);
+                            createCharacUI.CreateCharacter();
                         }
 
                         break;
@@ -131,6 +146,7 @@ public class ClientManager : TSingleton<ClientManager>
                         if(pResultEnroll._result == 0)
                         {
                             UIManager._instance.Close(UIManager.eKindWindow.EnrollUI);
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Enroll_Success);
                         }
                         else
                         {
@@ -152,7 +168,24 @@ public class ClientManager : TSingleton<ClientManager>
                     case DefinedProtocol.eToClient.EndCharacterInfo:
 
                         UIManager._instance.Close(UIManager.eKindWindow.LogInUI);
+                        UIManager._instance.Close(UIManager.eKindWindow.CreateCharacterUI);
                         UIManager._instance.GetWnd<SelectCharacterUI>(UIManager.eKindWindow.SelectCharacterUI).SetSortOrder(5);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.EndCreateCharacter:
+
+                        DefinedStructure.P_ResultCheck pResultCreateCharac = new DefinedStructure.P_ResultCheck();
+                        pResultCreateCharac = (DefinedStructure.P_ResultCheck)ConvertPacket.ByteArrayToStructure(pToClient._data, pResultCreateCharac.GetType(), pToClient._totalSize);
+
+                        if(pResultCreateCharac._result == 0)
+                        {
+                            GetMyCharacterInfo();
+                        }
+                        else
+                        {
+                            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Character_Fail);
+                        }
 
                         break;
                 }
@@ -182,12 +215,20 @@ public class ClientManager : TSingleton<ClientManager>
         ToPacket(DefinedProtocol.eFromClient.LogInTry, pLogInTry);
     }
 
-    public void OverlapCheck(string target)
+    public void OverlapCheck_ID(string target)
     {
         DefinedStructure.P_OverlapCheck pOverlapCheck;
         pOverlapCheck._target = target;
 
         ToPacket(DefinedProtocol.eFromClient.OverlapCheck_ID, pOverlapCheck);
+    }
+
+    public void OverlapCheck_NickName(string target)
+    {
+        DefinedStructure.P_OverlapCheck pOverlapCheck;
+        pOverlapCheck._target = target;
+
+        ToPacket(DefinedProtocol.eFromClient.OverlapCheck_NickName, pOverlapCheck);
     }
 
     public void EnrollTry(string id, string pw)
@@ -197,6 +238,16 @@ public class ClientManager : TSingleton<ClientManager>
         pEnrollTry._pw = pw;
 
         ToPacket(DefinedProtocol.eFromClient.EnrollTry, pEnrollTry);
+    }
+
+    public void CreateCharacter(string nickname, int characIndex, int slot)
+    {
+        DefinedStructure.P_CreateCharacter pCreateCharacter;
+        pCreateCharacter._nickName = nickname;
+        pCreateCharacter._characterIndex = characIndex;
+        pCreateCharacter._slot = slot;
+
+        ToPacket(DefinedProtocol.eFromClient.CreateCharacter, pCreateCharacter);
     }
 
     void GetMyCharacterInfo()
@@ -210,9 +261,27 @@ public class ClientManager : TSingleton<ClientManager>
     {
         DefinedStructure.PacketInfo packetRecieve;
         packetRecieve._id = (int)fromClientID;
-        packetRecieve._data = ConvertPacket.StructureToByteArray(str);
-        packetRecieve._totalSize = packetRecieve._data.Length;
-
+        packetRecieve._data = new byte[1024];
+        byte[] temp = ConvertPacket.StructureToByteArray(str);
+        for (int n = 0; n < temp.Length; n++)
+            packetRecieve._data[n] = temp[n];
+        packetRecieve._totalSize = temp.Length;
+        
         _fromClientQueue.Enqueue(ConvertPacket.StructureToByteArray(packetRecieve));
+    }
+
+    private void OnApplicationQuit()
+    {
+        if(_server != null)
+        {
+            DefinedStructure.P_Request pConnectionTerminate;
+
+            ToPacket(DefinedProtocol.eFromClient.ConnectionTerminate, pConnectionTerminate);
+
+            //_server.Shutdown(SocketShutdown.Both);
+            _server.Disconnect(true);
+            _server.Close();
+            _server = null;
+        }
     }
 }

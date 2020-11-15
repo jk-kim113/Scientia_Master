@@ -11,7 +11,6 @@ public class SystemMessageUI : MonoBehaviour
         ID_Overlap_NonCheck,
         ID_Overlap,
         NickName_Overlap,
-        NickName_Overlap_NonCheck,
         Enroll_Success,
         Enroll_Fail,
         Character_Fail,
@@ -22,6 +21,7 @@ public class SystemMessageUI : MonoBehaviour
         ID_Rule,
         Pw_Rule,
         NickName_Rule,
+        ID_Non_Overlap
     }
 
 #pragma warning disable 0649
@@ -43,5 +43,11 @@ public class SystemMessageUI : MonoBehaviour
     {
         SystemMessageUI systemMsgUI = UIManager._instance.OpenWnd<SystemMessageUI>(UIManager.eKindWindow.SystemMessageUI);
         systemMsgUI.ShowMessage(TableManager._instance.Get(eTableType.SystemMessageData).ToS((int)type + 1, "Message"));
+    }
+
+    public static void Open(string error)
+    {
+        SystemMessageUI systemMsgUI = UIManager._instance.OpenWnd<SystemMessageUI>(UIManager.eKindWindow.SystemMessageUI);
+        systemMsgUI.ShowMessage(error);
     }
 }
