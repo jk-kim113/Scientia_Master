@@ -14,9 +14,11 @@ public class CharacterSlot : MonoBehaviour
     Text _levelText;
 #pragma warning restore
 
+    string _myNickName;
+
     public void InitSlot(string nickname, int avartarindex, int accountlevel)
     {
-        _nameText.text = nickname;
+        _nameText.text = _myNickName = nickname;
 
         _characImg.sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image,
             TableManager._instance.Get(eTableType.CharacterData).ToS(avartarindex, "EnglishName"));
@@ -26,6 +28,8 @@ public class CharacterSlot : MonoBehaviour
 
     public void SelectCharacter()
     {
-        // TODO Enter Lobby Scene
+        UIManager._instance.Close(UIManager.eKindWindow.SelectCharacterUI);
+        ClientManager._instance._NowNickName = _myNickName;
+        SceneControlManager._instance.StartLoadLobbyScene();
     }
 }

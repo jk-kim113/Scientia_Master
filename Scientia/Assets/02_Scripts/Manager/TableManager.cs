@@ -9,6 +9,9 @@ public enum eTableType
     ImageData,
     CharacterData,
     CharacterExplainData,
+    CardData,
+    CardTabData,
+    KoreanData,
 
     max
 }
@@ -47,6 +50,9 @@ public class TableManager : TSingleton<TableManager>
         Load<ImageData>(eTableType.ImageData);
         Load<CharacterData>(eTableType.CharacterData);
         Load<CharacterExplainData>(eTableType.CharacterExplainData);
+        Load<CardData>(eTableType.CardData);
+        Load<CardTabData>(eTableType.CardTabData);
+        Load<KoreanData>(eTableType.KoreanData);
     }
 
     public TableBase Get(eTableType type)

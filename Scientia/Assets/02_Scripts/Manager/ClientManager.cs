@@ -6,11 +6,11 @@ using System.Net.Sockets;
 
 public class ClientManager : TSingleton<ClientManager>
 {
-    const string _ip = "1.235.143.68";
-    const int _port = 100;
+    //const string _ip = "1.235.143.68";
+    //const int _port = 100;
 
-    //const string _ip = "127.0.0.1";
-    //const int _port = 80;
+    const string _ip = "127.0.0.1";
+    const int _port = 80;
 
     Socket _server;
 
@@ -18,6 +18,9 @@ public class ClientManager : TSingleton<ClientManager>
 
     Queue<DefinedStructure.PacketInfo> _toClientQueue = new Queue<DefinedStructure.PacketInfo>();
     Queue<byte[]> _fromClientQueue = new Queue<byte[]>();
+
+    string _currentNickName;
+    public string _NowNickName { get { return _currentNickName; } set { _currentNickName = value; } }
 
     protected override void Init()
     {
@@ -86,6 +89,7 @@ public class ClientManager : TSingleton<ClientManager>
 
                 switch ((DefinedProtocol.eToClient)pToClient._id)
                 {
+                    #region LogIn / Character
                     case DefinedProtocol.eToClient.LogInResult:
 
                         DefinedStructure.P_ResultLogIn pResultLogIn = new DefinedStructure.P_ResultLogIn();
@@ -188,6 +192,17 @@ public class ClientManager : TSingleton<ClientManager>
                         }
 
                         break;
+                    #endregion
+
+                    case DefinedProtocol.eToClient.ShowCardReleaseInfo:
+
+                        DefinedStructure.P_ShowCardReleaseInfo pShowCardReleaseInfo = new DefinedStructure.P_ShowCardReleaseInfo();
+                        pShowCardReleaseInfo = (DefinedStructure.P_ShowCardReleaseInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowCardReleaseInfo.GetType(), pToClient._totalSize);
+
+                        MyInfoUI myInfoUI = UIManager._instance.GetWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
+                        myInfoUI.Unlock(pShowCardReleaseInfo._cardIndexList);
+
+                        break;
                 }
             }
 
@@ -250,6 +265,14 @@ public class ClientManager : TSingleton<ClientManager>
         ToPacket(DefinedProtocol.eFromClient.CreateCharacter, pCreateCharacter);
     }
 
+    public void RequestMyCardReleaseInfo()
+    {
+        DefinedStructure.P_MyCardReleaseInfo pMyCardReleaseInfo;
+        pMyCardReleaseInfo._nickName = _currentNickName;
+
+        ToPacket(DefinedProtocol.eFromClient.MyCardReleaseInfo, pMyCardReleaseInfo);
+    }
+
     void GetMyCharacterInfo()
     {
         DefinedStructure.P_Request pGetMyChatacInfo;
@@ -270,18 +293,18 @@ public class ClientManager : TSingleton<ClientManager>
         _fromClientQueue.Enqueue(ConvertPacket.StructureToByteArray(packetRecieve));
     }
 
-    private void OnApplicationQuit()
-    {
-        if(_server != null)
-        {
-            DefinedStructure.P_Request pConnectionTerminate;
+    //private void OnApplicationQuit()
+    //{
+    //    if(_server != null)
+    //    {
+    //        DefinedStructure.P_Request pConnectionTerminate;
 
-            ToPacket(DefinedProtocol.eFromClient.ConnectionTerminate, pConnectionTerminate);
+    //        ToPacket(DefinedProtocol.eFromClient.ConnectionTerminate, pConnectionTerminate);
 
-            //_server.Shutdown(SocketShutdown.Both);
-            _server.Disconnect(true);
-            _server.Close();
-            _server = null;
-        }
-    }
+    //        //_server.Shutdown(SocketShutdown.Both);
+    //        _server.Disconnect(true);
+    //        _server.Close();
+    //        _server = null;
+    //    }
+    //}
 }

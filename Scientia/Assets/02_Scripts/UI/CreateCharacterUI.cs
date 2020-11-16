@@ -22,6 +22,8 @@ public class CreateCharacterUI : MonoBehaviour
 
     private void OnEnable()
     {
+        _characterKindTr.position = new Vector3(_characterKindTr.position.x, 0, _characterKindTr.position.z);
+
         if (_selectedIndex != 0)
             _cKindList[_selectedIndex - 1].ClickCancel();
 

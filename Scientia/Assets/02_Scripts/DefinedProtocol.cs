@@ -12,6 +12,7 @@ public class DefinedProtocol
         EnrollTry,
         GetMyCharacterInfo,
         CreateCharacter,
+        MyCardReleaseInfo,
 
 
         ConnectionTerminate,
@@ -28,6 +29,7 @@ public class DefinedProtocol
         CharacterInfo,
         EndCharacterInfo,
         EndCreateCharacter,
+        ShowCardReleaseInfo,
 
         max
     }

@@ -72,6 +72,14 @@ public class SceneControlManager : TSingleton<SceneControlManager>
         //SoundManager._instance.PlayBGMSound(SoundManager.eTypeBGM.HOME);
     }
 
+    public void StartLoadLobbyScene()
+    {
+        _prevScene = _currentScene;
+        _currentScene = eTypeScene.Lobby;
+        StartCoroutine(LoadingPrecess("LobbyScene"));
+        //SoundManager._instance.PlayBGMSound(SoundManager.eTypeBGM.HOME);
+    }
+
     public void StartLoadIngameScene()
     {
         _prevScene = _currentScene;

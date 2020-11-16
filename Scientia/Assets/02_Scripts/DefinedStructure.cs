@@ -49,6 +49,13 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.I4)]
         public int _slot;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_MyCardReleaseInfo
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+    }
     #endregion
 
     #region ToClient
@@ -79,6 +86,13 @@ public class DefinedStructure
         public int _accountLevel;
         [MarshalAs(UnmanagedType.I4)]
         public int _slotIndex;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowCardReleaseInfo
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 48)]
+        public int[] _cardIndexList;
     }
     #endregion
 }
