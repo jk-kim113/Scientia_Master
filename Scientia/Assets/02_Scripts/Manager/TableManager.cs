@@ -52,7 +52,6 @@ public class TableManager : TSingleton<TableManager>
         Load<CharacterExplainData>(eTableType.CharacterExplainData);
         Load<CardData>(eTableType.CardData);
         Load<CardTabData>(eTableType.CardTabData);
-        Load<KoreanData>(eTableType.KoreanData);
     }
 
     public TableBase Get(eTableType type)

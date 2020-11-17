@@ -13,7 +13,7 @@ public class DefinedProtocol
         GetMyCharacterInfo,
         CreateCharacter,
         MyCardReleaseInfo,
-
+        AddReleaseCard,
 
         ConnectionTerminate,
 
@@ -30,6 +30,7 @@ public class DefinedProtocol
         EndCharacterInfo,
         EndCreateCharacter,
         ShowCardReleaseInfo,
+        CompleteAddReleaseCard,
 
         max
     }

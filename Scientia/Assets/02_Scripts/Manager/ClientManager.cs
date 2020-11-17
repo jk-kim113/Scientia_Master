@@ -200,7 +200,18 @@ public class ClientManager : TSingleton<ClientManager>
                         pShowCardReleaseInfo = (DefinedStructure.P_ShowCardReleaseInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowCardReleaseInfo.GetType(), pToClient._totalSize);
 
                         MyInfoUI myInfoUI = UIManager._instance.GetWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
+                        while(!myInfoUI._IsReady)
+                        {
+                            yield return null;
+                        }
                         myInfoUI.Unlock(pShowCardReleaseInfo._cardIndexList);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.CompleteAddReleaseCard:
+
+                        CardInfoUI cardInfoUI = UIManager._instance.GetWnd<CardInfoUI>(UIManager.eKindWindow.CardInfoUI);
+                        cardInfoUI.EndUnlock();
 
                         break;
                 }
@@ -271,6 +282,15 @@ public class ClientManager : TSingleton<ClientManager>
         pMyCardReleaseInfo._nickName = _currentNickName;
 
         ToPacket(DefinedProtocol.eFromClient.MyCardReleaseInfo, pMyCardReleaseInfo);
+    }
+
+    public void MyCardRelease(int cardIndex)
+    {
+        DefinedStructure.P_ReleaseCard pReleaseCard;
+        pReleaseCard._nickName = _currentNickName;
+        pReleaseCard._cardIndex = cardIndex;
+
+        ToPacket(DefinedProtocol.eFromClient.AddReleaseCard, pReleaseCard);
     }
 
     void GetMyCharacterInfo()

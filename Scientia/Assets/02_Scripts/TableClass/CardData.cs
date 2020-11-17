@@ -7,6 +7,7 @@ public class CardData : TableBase
     public enum Index
     {
         Index,
+        KoreanName,
         Name,
         Effect,
 

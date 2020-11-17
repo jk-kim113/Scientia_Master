@@ -56,6 +56,15 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _nickName;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ReleaseCard
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _cardIndex;
+    }
     #endregion
 
     #region ToClient
@@ -91,7 +100,7 @@ public class DefinedStructure
     [StructLayout(LayoutKind.Sequential)]
     public struct P_ShowCardReleaseInfo
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 48)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 48)]
         public int[] _cardIndexList;
     }
     #endregion

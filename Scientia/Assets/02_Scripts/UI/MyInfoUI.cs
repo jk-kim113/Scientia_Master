@@ -26,14 +26,18 @@ public class MyInfoUI : MonoBehaviour
     List<int> _myDeckList = new List<int>();
 
     int _selectTabIndex;
+    public eTabField _nowTabField { get { return (eTabField)_selectTabIndex; } }
+
+    bool _isReady;
+    public bool _IsReady { get { return _isReady; } }
 
     private void Start()
     {
-        
+        _isReady = false;
         for (int n = 0; n < _tabArr.Length; n++)
         {
             _tabArr[n].InitTab(this,
-                TableManager._instance.Get(eTableType.CardTabData).ToS(n + 1, "Field"), n + 1);
+                TableManager._instance.Get(eTableType.CardTabData).ToS(n + 1, "KoreanName"), n + 1);
         }
 
         _prefabCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "CardObj");
@@ -44,11 +48,14 @@ public class MyInfoUI : MonoBehaviour
             card.InitCard(
                 ResourcePoolManager._instance.GetObj<Sprite>(
                     ResourcePoolManager.eResourceKind.Image, 
-                    TableManager._instance.Get(eTableType.CardData).ToS(n + 1, "Name")));
+                    TableManager._instance.Get(eTableType.CardData).ToS(n + 1, "Name")),
+                n);
 
             _cardList.Add(card);
             card.gameObject.SetActive(false);
         }
+
+        _isReady = true;
     }
 
     public void SelectTab(int index)
@@ -94,8 +101,25 @@ public class MyInfoUI : MonoBehaviour
             if (cardIndex[n] == 0)
                 break;
 
-            _cardList[cardIndex[n]].Unlock();
+            _cardList[cardIndex[n] - 1].Unlock();
         }
+    }
+
+    public void Unlock(int cardIndex)
+    {
+        if(_cardList[cardIndex] != null)
+            _cardList[cardIndex - 1].Unlock();
+    }
+
+    public void AddMyDeck(int index)
+    {
+        _myDeckList.Add(index);
+    }
+
+    public void DeleteMyDeck(int index)
+    {
+        _myDeckList.Remove(index);
+        _cardList[index].gameObject.SetActive(false);
     }
 
     void CardOnOff(bool isOn)
