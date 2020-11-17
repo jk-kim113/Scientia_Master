@@ -194,17 +194,19 @@ public class ClientManager : TSingleton<ClientManager>
                         break;
                     #endregion
 
-                    case DefinedProtocol.eToClient.ShowCardReleaseInfo:
-
-                        DefinedStructure.P_ShowCardReleaseInfo pShowCardReleaseInfo = new DefinedStructure.P_ShowCardReleaseInfo();
-                        pShowCardReleaseInfo = (DefinedStructure.P_ShowCardReleaseInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowCardReleaseInfo.GetType(), pToClient._totalSize);
+                    case DefinedProtocol.eToClient.ShowMyInfo:
+                        
+                        DefinedStructure.P_MyInfoData pMyInfoData = new DefinedStructure.P_MyInfoData();
+                        pMyInfoData = (DefinedStructure.P_MyInfoData)ConvertPacket.ByteArrayToStructure(pToClient._data, pMyInfoData.GetType(), pToClient._totalSize);
 
                         MyInfoUI myInfoUI = UIManager._instance.GetWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
                         while(!myInfoUI._IsReady)
                         {
                             yield return null;
                         }
-                        myInfoUI.Unlock(pShowCardReleaseInfo._cardIndexList);
+                        myInfoUI.Unlock(pMyInfoData._cardReleaseArr);
+
+                        LobbyManager._instance.LoadFinish();
 
                         break;
 
@@ -276,12 +278,12 @@ public class ClientManager : TSingleton<ClientManager>
         ToPacket(DefinedProtocol.eFromClient.CreateCharacter, pCreateCharacter);
     }
 
-    public void RequestMyCardReleaseInfo()
+    public void RequestMyInfoData()
     {
-        DefinedStructure.P_MyCardReleaseInfo pMyCardReleaseInfo;
-        pMyCardReleaseInfo._nickName = _currentNickName;
+        DefinedStructure.P_GetMyInfoData pGetMyInfoData;
+        pGetMyInfoData._nickName = _currentNickName;
 
-        ToPacket(DefinedProtocol.eFromClient.MyCardReleaseInfo, pMyCardReleaseInfo);
+        ToPacket(DefinedProtocol.eFromClient.GetMyInfoData, pGetMyInfoData);
     }
 
     public void MyCardRelease(int cardIndex)

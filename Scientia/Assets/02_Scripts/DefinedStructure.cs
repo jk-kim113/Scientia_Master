@@ -51,7 +51,7 @@ public class DefinedStructure
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct P_MyCardReleaseInfo
+    public struct P_GetMyInfoData
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _nickName;
@@ -98,10 +98,22 @@ public class DefinedStructure
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct P_ShowCardReleaseInfo
+    public struct P_MyInfoData
     {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _characIndex;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+        public int[] _levelArr;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+        public int[] _expArr;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 48)]
-        public int[] _cardIndexList;
+        public int[] _cardReleaseArr;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 48)]
+        public int[] _cardRentalArr;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 48)]
+        public float[] _rentalTimeArr;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12)]
+        public int[] _myDeckArr;
     }
     #endregion
 }

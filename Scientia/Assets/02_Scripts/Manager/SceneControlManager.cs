@@ -58,6 +58,18 @@ public class SceneControlManager : TSingleton<SceneControlManager>
         wnd.SettingLoadRate(1);
         yield return new WaitForSeconds(1.8f);
 
+        switch(_currentScene)
+        {
+            case eTypeScene.Lobby:
+
+                while(LobbyManager._instance._nowLoadType != LobbyManager.eLoadType.LoadEnd)
+                {
+                    yield return null;
+                }
+
+                break;
+        }
+
         _loadState = eStateLoadding.LoadingDone;
         UIManager._instance.Close(UIManager.eKindWindow.LoadingUI);
         yield return new WaitForSeconds(1f);
