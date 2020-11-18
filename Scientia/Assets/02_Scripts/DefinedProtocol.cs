@@ -14,6 +14,8 @@ public class DefinedProtocol
         CreateCharacter,
         GetMyInfoData,
         AddReleaseCard,
+        CreateRoom,
+        GetRoomList,
 
         ConnectionTerminate,
 
@@ -31,6 +33,8 @@ public class DefinedProtocol
         EndCreateCharacter,
         ShowMyInfo,
         CompleteAddReleaseCard,
+        CompleteCreateRoom,
+        ShowRoomList,
 
         max
     }

@@ -6,6 +6,18 @@ using System.Net.Sockets;
 
 public class ClientManager : TSingleton<ClientManager>
 {
+    public struct ShowRoom
+    {
+        public int _roomNumber;
+        public string _name;
+        public int _isLock;
+        public int _currentMemberCnt;
+        public int _maxMemberCnt;
+        public string _mode;
+        public string _rule;
+        public int _isPlay;
+    }
+
     //const string _ip = "1.235.143.68";
     //const int _port = 100;
 
@@ -216,6 +228,21 @@ public class ClientManager : TSingleton<ClientManager>
                         cardInfoUI.EndUnlock();
 
                         break;
+
+                    case DefinedProtocol.eToClient.CompleteCreateRoom:
+
+                        SceneControlManager._instance.StartLoadBattleScene();
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowRoomList:
+
+                        DefinedStructure.P_RoomInfoList pRoomInfoList = new DefinedStructure.P_RoomInfoList();
+                        pRoomInfoList = (DefinedStructure.P_RoomInfoList)ConvertPacket.ByteArrayToStructure(pToClient._data, pRoomInfoList.GetType(), pToClient._totalSize);
+
+                        Debug.Log(pRoomInfoList._roomInfoList[0]._name);
+
+                        break;
                 }
             }
 
@@ -293,6 +320,26 @@ public class ClientManager : TSingleton<ClientManager>
         pReleaseCard._cardIndex = cardIndex;
 
         ToPacket(DefinedProtocol.eFromClient.AddReleaseCard, pReleaseCard);
+    }
+
+    public void CreateRoom(string name, bool isLock, string pw, string mode, string rule)
+    {
+        DefinedStructure.P_CreateRoom pCreateRoom;
+        pCreateRoom._nickNaame = _currentNickName;
+        pCreateRoom._name = name;
+        pCreateRoom._isLock = isLock ? 0 : 1;
+        pCreateRoom._pw = pw;
+        pCreateRoom._mode = mode;
+        pCreateRoom._rule = rule;
+
+        ToPacket(DefinedProtocol.eFromClient.CreateRoom, pCreateRoom);
+    }
+
+    public void GetRoomList()
+    {
+        DefinedStructure.P_Request pRequest;
+
+        ToPacket(DefinedProtocol.eFromClient.GetRoomList, pRequest);
     }
 
     void GetMyCharacterInfo()

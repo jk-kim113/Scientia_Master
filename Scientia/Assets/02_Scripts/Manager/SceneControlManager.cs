@@ -10,7 +10,7 @@ public class SceneControlManager : TSingleton<SceneControlManager>
         Start = 0,
         LogIn,
         Lobby,
-        Ingame
+        Battle
     }
 
     public enum eStateLoadding
@@ -92,11 +92,11 @@ public class SceneControlManager : TSingleton<SceneControlManager>
         //SoundManager._instance.PlayBGMSound(SoundManager.eTypeBGM.HOME);
     }
 
-    public void StartLoadIngameScene()
+    public void StartLoadBattleScene()
     {
         _prevScene = _currentScene;
-        _currentScene = eTypeScene.Ingame;
-        StartCoroutine(LoadingPrecess("IngameScene"));
+        _currentScene = eTypeScene.Battle;
+        StartCoroutine(LoadingPrecess("BattleScene"));
         //SoundManager._instance.PlayBGMSound(SoundManager.eTypeBGM.INGAME);
     }
 }

@@ -41,6 +41,7 @@ public class LobbyManager : MonoBehaviour
     {
         _currentLoadType = eLoadType.MyInfoStart;
 
+        UIManager._instance.OpenWnd<LobbyUI>(UIManager.eKindWindow.LobbyUI);
         UIManager._instance.OpenWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
         
         ClientManager._instance.RequestMyInfoData();
@@ -55,6 +56,7 @@ public class LobbyManager : MonoBehaviour
 
                 UIManager._instance.Close(UIManager.eKindWindow.MyInfoUI);
                 _currentLoadType = eLoadType.LoadEnd;
+                ClientManager._instance.GetRoomList();
 
                 break;
         }

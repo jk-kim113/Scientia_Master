@@ -15,6 +15,7 @@ public class UIManager : TSingleton<UIManager>
         LobbyUI,
         MyInfoUI,
         CardInfoUI,
+        CreateRoomUI,
 
         max
     }

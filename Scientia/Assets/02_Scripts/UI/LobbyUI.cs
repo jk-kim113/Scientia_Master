@@ -8,4 +8,9 @@ public class LobbyUI : MonoBehaviour
     {
         UIManager._instance.OpenWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
     }
+
+    public void CreateRoomButton()
+    {
+        UIManager._instance.OpenWnd<CreateRoomUI>(UIManager.eKindWindow.CreateRoomUI);
+    }
 }

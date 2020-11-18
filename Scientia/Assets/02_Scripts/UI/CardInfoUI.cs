@@ -35,7 +35,7 @@ public class CardInfoUI : MonoBehaviour, IPointerClickHandler, IPointerDownHandl
     int _cardIndex;
 
     private void OnEnable()
-    {
+    {   
         _cardGaugeBar.fillAmount = 0;
     }
 
