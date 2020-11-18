@@ -18,8 +18,7 @@ public class LogInUI : MonoBehaviour
         {
             if(TouchScreenKeyboard.isSupported && !TouchScreenKeyboard.visible)
                 TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable);
-        }
-            
+        }   
     }
 
     public void LogInButton()

@@ -237,10 +237,24 @@ public class ClientManager : TSingleton<ClientManager>
 
                     case DefinedProtocol.eToClient.ShowRoomList:
 
-                        DefinedStructure.P_RoomInfoList pRoomInfoList = new DefinedStructure.P_RoomInfoList();
-                        pRoomInfoList = (DefinedStructure.P_RoomInfoList)ConvertPacket.ByteArrayToStructure(pToClient._data, pRoomInfoList.GetType(), pToClient._totalSize);
+                        DefinedStructure.P_RoomInfo pRoomInfo = new DefinedStructure.P_RoomInfo();
+                        pRoomInfo = (DefinedStructure.P_RoomInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pRoomInfo.GetType(), pToClient._totalSize);
 
-                        Debug.Log(pRoomInfoList._roomInfoList[0]._name);
+                        UIManager._instance.GetWnd<LobbyUI>(UIManager.eKindWindow.LobbyUI).ShowRoomInfo(
+                            pRoomInfo._roomNumber,
+                            pRoomInfo._name,
+                            pRoomInfo._isLock == 0,
+                            pRoomInfo._currentMemberCnt,
+                            pRoomInfo._maxMemberCnt,
+                            pRoomInfo._mode,
+                            pRoomInfo._rule,
+                            pRoomInfo._isPlay == 0?"게임중":"대기중");
+
+                        break;
+
+                    case DefinedProtocol.eToClient.FinishShowRoom:
+
+                        LobbyManager._instance.LoadFinish();
 
                         break;
                 }

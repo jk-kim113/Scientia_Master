@@ -54,9 +54,17 @@ public class LobbyManager : MonoBehaviour
         {
             case eLoadType.MyInfoWait:
 
+                _currentLoadType = eLoadType.MyInfoEnd;
                 UIManager._instance.Close(UIManager.eKindWindow.MyInfoUI);
-                _currentLoadType = eLoadType.LoadEnd;
+                _currentLoadType = eLoadType.LobbyInfoStart;
                 ClientManager._instance.GetRoomList();
+                _currentLoadType = eLoadType.LobbyInfoWait;
+
+                break;
+
+            case eLoadType.LobbyInfoWait:
+
+                _currentLoadType = eLoadType.LoadEnd;
 
                 break;
         }

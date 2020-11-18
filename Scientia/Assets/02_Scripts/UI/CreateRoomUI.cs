@@ -65,6 +65,18 @@ public class CreateRoomUI : MonoBehaviour
     private void Update()
     {
         _pwField.interactable = _pwCheckToggle.isOn;
+
+        if (_nameField.isFocused)
+        {
+            if (TouchScreenKeyboard.isSupported && !TouchScreenKeyboard.visible)
+                TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable);
+        }
+
+        if (_pwField.isFocused)
+        {
+            if (TouchScreenKeyboard.isSupported && !TouchScreenKeyboard.visible)
+                TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable);
+        }
     }
 
     public void OkButton()

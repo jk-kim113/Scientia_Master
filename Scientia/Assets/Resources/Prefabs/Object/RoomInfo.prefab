@@ -117,7 +117,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2324137050937364961}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2324137052737054572}
+        m_MethodName: EnterRoomButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2324137050947856654
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,6 +1350,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d06f49c5751445f41ba28e93aef95c91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _roomNumberText: {fileID: 2324137051245681921}
+  _nameText: {fileID: 2324137051315456127}
+  _lockState: {fileID: 2324137052061504210}
+  _memberCntText: {fileID: 2324137051070108752}
+  _modeText: {fileID: 2324137052109963673}
+  _ruleText: {fileID: 1009961618985020427}
+  _isPlayText: {fileID: 2324137052077707826}
 --- !u!1 &2324137052834625501
 GameObject:
   m_ObjectHideFlags: 0

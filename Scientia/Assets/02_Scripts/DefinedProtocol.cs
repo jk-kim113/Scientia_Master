@@ -35,6 +35,7 @@ public class DefinedProtocol
         CompleteAddReleaseCard,
         CompleteCreateRoom,
         ShowRoomList,
+        FinishShowRoom,
 
         max
     }
