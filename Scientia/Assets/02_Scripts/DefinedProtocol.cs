@@ -16,6 +16,9 @@ public class DefinedProtocol
         AddReleaseCard,
         CreateRoom,
         GetRoomList,
+        TryEnterRoom,
+        InformReady,
+        InformGameStart,
 
         ConnectionTerminate,
 
@@ -33,9 +36,11 @@ public class DefinedProtocol
         EndCreateCharacter,
         ShowMyInfo,
         CompleteAddReleaseCard,
-        CompleteCreateRoom,
+        EnterRoom,
         ShowRoomList,
         FinishShowRoom,
+        ShowReady,
+        ShowMaster,
 
         max
     }

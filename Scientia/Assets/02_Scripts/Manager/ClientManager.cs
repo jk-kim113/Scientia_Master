@@ -229,9 +229,22 @@ public class ClientManager : TSingleton<ClientManager>
 
                         break;
 
-                    case DefinedProtocol.eToClient.CompleteCreateRoom:
+                    case DefinedProtocol.eToClient.EnterRoom:
 
                         SceneControlManager._instance.StartLoadBattleScene();
+
+                        DefinedStructure.P_UserInfo pUserInfo = new DefinedStructure.P_UserInfo();
+                        pUserInfo = (DefinedStructure.P_UserInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pUserInfo.GetType(), pToClient._totalSize);
+
+                        while(!UIManager._instance.isOpened(UIManager.eKindWindow.BattleUI))
+                        {
+                            yield return null;
+                        }
+
+                        BattleUI battleUI = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI);
+                        battleUI._RoomNumber = pUserInfo._roomNumber;
+
+                        battleUI.ShowUserInfo(pUserInfo._index, pUserInfo._nickName, pUserInfo._accountLevel, pUserInfo._isReady == 0);
 
                         break;
 
@@ -249,6 +262,24 @@ public class ClientManager : TSingleton<ClientManager>
                             pRoomInfo._mode,
                             pRoomInfo._rule,
                             pRoomInfo._isPlay == 0?"게임중":"대기중");
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowReady:
+
+                        DefinedStructure.P_ShowReady pShowReady = new DefinedStructure.P_ShowReady();
+                        pShowReady = (DefinedStructure.P_ShowReady)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowReady.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowReadyUser(pShowReady._index, pShowReady._isReady == 0);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowMaster:
+
+                        DefinedStructure.P_MasterInfo pMasterInfo = new DefinedStructure.P_MasterInfo();
+                        pMasterInfo = (DefinedStructure.P_MasterInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pMasterInfo.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowMaster(pMasterInfo._masterName.CompareTo(_currentNickName) == 0);
 
                         break;
 
@@ -354,6 +385,31 @@ public class ClientManager : TSingleton<ClientManager>
         DefinedStructure.P_Request pRequest;
 
         ToPacket(DefinedProtocol.eFromClient.GetRoomList, pRequest);
+    }
+
+    public void EnterRoom(int roomNum)
+    {
+        DefinedStructure.P_TryEnterRoom pTryEnterRoom;
+        pTryEnterRoom._nickName = _currentNickName;
+        pTryEnterRoom._roomNumber = roomNum;
+
+        ToPacket(DefinedProtocol.eFromClient.TryEnterRoom, pTryEnterRoom);
+    }
+
+    public void InformReady(int roomNum)
+    {
+        DefinedStructure.P_InformRoomInfo pInformReady;
+        pInformReady._roomNumber = roomNum;
+
+        ToPacket(DefinedProtocol.eFromClient.InformReady, pInformReady);
+    }
+
+    public void InformGameStart(int roomNum)
+    {
+        DefinedStructure.P_InformRoomInfo pInformGameStart;
+        pInformGameStart._roomNumber = roomNum;
+
+        ToPacket(DefinedProtocol.eFromClient.InformGameStart, pInformGameStart);
     }
 
     void GetMyCharacterInfo()

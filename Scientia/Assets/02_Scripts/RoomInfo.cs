@@ -38,6 +38,6 @@ public class RoomInfo : MonoBehaviour
 
     public void EnterRoomButton()
     {
-
+        ClientManager._instance.EnterRoom(_myRoomNumber);
     }
 }

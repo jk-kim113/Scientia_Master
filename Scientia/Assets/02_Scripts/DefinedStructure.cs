@@ -82,6 +82,22 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _rule;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_TryEnterRoom
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _roomNumber;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_InformRoomInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _roomNumber;
+    }
     #endregion
 
     #region ToClient
@@ -152,6 +168,37 @@ public class DefinedStructure
         public string _rule;
         [MarshalAs(UnmanagedType.I4)]
         public int _isPlay;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_UserInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _roomNumber;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _accountLevel;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _isReady;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_MasterInfo
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _masterName;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowReady
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _isReady;
     }
     #endregion
 }
