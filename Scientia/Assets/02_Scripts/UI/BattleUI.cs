@@ -5,14 +5,6 @@ using UnityEngine.UI;
 
 public class BattleUI : MonoBehaviour
 {
-    public enum eGameState
-    {
-        GameWait,
-        GamePlaying,
-
-        max
-    }
-
 #pragma warning disable 0649
     [SerializeField]
     BattleInfo[] _userInfoArr;
@@ -20,31 +12,32 @@ public class BattleUI : MonoBehaviour
     GameObject[] _stateObj;
     [SerializeField]
     Button _actionBtn;
+    [SerializeField]
+    ProjectBoard _projectBoard;
 #pragma warning restore
 
-    eGameState _currentGameState;
-
-    int _roomNumber;
-    public int _RoomNumber { set { _roomNumber = value; } }
-
-    private void Awake()
+    public void StateChange(BattleManager.eBattleState state)
     {
-        _currentGameState = eGameState.GameWait;
-    }
-
-    private void Start()
-    {
-        OpenStateObj();
-    }
-
-    void OpenStateObj()
-    {
-        for (int n = 0; n < _stateObj.Length; n++)
+        switch(state)
         {
-            if ((eGameState)n == _currentGameState)
-                _stateObj[n].SetActive(true);
-            else
-                _stateObj[n].SetActive(false);
+            case BattleManager.eBattleState.GameWait:
+            case BattleManager.eBattleState.ReadCard:
+            case BattleManager.eBattleState.GamePlaying:
+
+                for (int n = 0; n < _stateObj.Length; n++)
+                    _stateObj[n].SetActive((int)state == n);
+
+                break;
+
+            case BattleManager.eBattleState.WaitServer:
+
+                for (int n = 0; n < _stateObj.Length; n++)
+                {
+                    if(_stateObj[n].activeSelf)
+                        _stateObj[n].SetActive(false);
+                }
+
+                break;
         }
     }
 
@@ -80,12 +73,12 @@ public class BattleUI : MonoBehaviour
 
     void InformGameStart()
     {
-        ClientManager._instance.InformGameStart(_roomNumber);
+        ClientManager._instance.InformGameStart();
     }
 
     void InformGameReady()
     {
-        ClientManager._instance.InformReady(_roomNumber);
+        ClientManager._instance.InformReady();
     }
 
     public void ShowReadyUser(int index, bool isReady)
@@ -99,6 +92,11 @@ public class BattleUI : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void ShowPickedCard(int[] pickedCardArr)
+    {
+        _projectBoard.ShowPickedCard(pickedCardArr);
     }
 
     public void ExitButton()

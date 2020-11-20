@@ -6,18 +6,6 @@ using System.Net.Sockets;
 
 public class ClientManager : TSingleton<ClientManager>
 {
-    public struct ShowRoom
-    {
-        public int _roomNumber;
-        public string _name;
-        public int _isLock;
-        public int _currentMemberCnt;
-        public int _maxMemberCnt;
-        public string _mode;
-        public string _rule;
-        public int _isPlay;
-    }
-
     //const string _ip = "1.235.143.68";
     //const int _port = 100;
 
@@ -206,6 +194,7 @@ public class ClientManager : TSingleton<ClientManager>
                         break;
                     #endregion
 
+                    #region Card
                     case DefinedProtocol.eToClient.ShowMyInfo:
                         
                         DefinedStructure.P_MyInfoData pMyInfoData = new DefinedStructure.P_MyInfoData();
@@ -228,7 +217,9 @@ public class ClientManager : TSingleton<ClientManager>
                         cardInfoUI.EndUnlock();
 
                         break;
+                    #endregion
 
+                    #region Room
                     case DefinedProtocol.eToClient.EnterRoom:
 
                         SceneControlManager._instance.StartLoadBattleScene();
@@ -241,9 +232,9 @@ public class ClientManager : TSingleton<ClientManager>
                             yield return null;
                         }
 
-                        BattleUI battleUI = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI);
-                        battleUI._RoomNumber = pUserInfo._roomNumber;
+                        BattleManager._instance._RoomNumber = pUserInfo._roomNumber;
 
+                        BattleUI battleUI = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI);
                         battleUI.ShowUserInfo(pUserInfo._index, pUserInfo._nickName, pUserInfo._accountLevel, pUserInfo._isReady == 0);
 
                         break;
@@ -286,6 +277,28 @@ public class ClientManager : TSingleton<ClientManager>
                     case DefinedProtocol.eToClient.FinishShowRoom:
 
                         LobbyManager._instance.LoadFinish();
+
+                        break;
+                    #endregion
+
+                    case DefinedProtocol.eToClient.CannotPlay:
+
+                        //TODO System Message 게임을 시작할 수 없습니다.
+
+                        break;
+
+                    case DefinedProtocol.eToClient.GameStart:
+
+                        //TODO Game Start
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowPickedCard:
+
+                        DefinedStructure.P_PickedCard pPickedCard = new DefinedStructure.P_PickedCard();
+                        pPickedCard = (DefinedStructure.P_PickedCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickedCard.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowPickedCard(pPickedCard._pickedCardArr);
 
                         break;
                 }
@@ -396,18 +409,18 @@ public class ClientManager : TSingleton<ClientManager>
         ToPacket(DefinedProtocol.eFromClient.TryEnterRoom, pTryEnterRoom);
     }
 
-    public void InformReady(int roomNum)
+    public void InformReady()
     {
         DefinedStructure.P_InformRoomInfo pInformReady;
-        pInformReady._roomNumber = roomNum;
+        pInformReady._roomNumber = BattleManager._instance._RoomNumber;
 
         ToPacket(DefinedProtocol.eFromClient.InformReady, pInformReady);
     }
 
-    public void InformGameStart(int roomNum)
+    public void InformGameStart()
     {
         DefinedStructure.P_InformRoomInfo pInformGameStart;
-        pInformGameStart._roomNumber = roomNum;
+        pInformGameStart._roomNumber = BattleManager._instance._RoomNumber;
 
         ToPacket(DefinedProtocol.eFromClient.InformGameStart, pInformGameStart);
     }

@@ -41,6 +41,9 @@ public class DefinedProtocol
         FinishShowRoom,
         ShowReady,
         ShowMaster,
+        CannotPlay,
+        GameStart,
+        ShowPickedCard,
 
         max
     }

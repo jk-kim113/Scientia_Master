@@ -9,14 +9,12 @@ public class CardObj : MonoBehaviour, IPointerClickHandler
 #pragma warning disable 0649
     [SerializeField]
     Image _cardImg;
-    [SerializeField]
-    GameObject _lockPanel;
 #pragma warning restore
 
-    bool _isUnlock;
+    protected bool _isUnlock;
     int _myIndex;
 
-    public void InitCard(Sprite img, int index)
+    public virtual void InitCard(Sprite img, int index)
     {
         _cardImg.sprite = img;
         _myIndex = index;
@@ -31,11 +29,5 @@ public class CardObj : MonoBehaviour, IPointerClickHandler
             TableManager._instance.Get(eTableType.CardData).ToS(_myIndex + 1, "Effect"),
             _isUnlock,
             _myIndex);
-    }
-
-    public void Unlock()
-    {
-        _isUnlock = true;
-        _lockPanel.SetActive(false);
     }
 }

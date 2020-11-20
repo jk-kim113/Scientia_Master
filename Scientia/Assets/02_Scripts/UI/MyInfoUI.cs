@@ -22,7 +22,7 @@ public class MyInfoUI : MonoBehaviour
 
     GameObject _prefabCardObj;
 
-    List<CardObj> _cardList = new List<CardObj>();
+    List<MyInfoCardObj> _cardList = new List<MyInfoCardObj>();
     List<int> _myDeckList = new List<int>();
 
     int _selectTabIndex;
@@ -44,7 +44,7 @@ public class MyInfoUI : MonoBehaviour
 
         for (int n = 0; n < TableManager._instance.Get(eTableType.CardData)._datas.Count; n++)
         {
-            CardObj card = Instantiate(_prefabCardObj, _cardInvenTr).GetComponent<CardObj>();
+            MyInfoCardObj card = Instantiate(_prefabCardObj, _cardInvenTr).GetComponent<MyInfoCardObj>();
             card.InitCard(
                 ResourcePoolManager._instance.GetObj<Sprite>(
                     ResourcePoolManager.eResourceKind.Image, 
