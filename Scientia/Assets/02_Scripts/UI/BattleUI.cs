@@ -16,6 +16,8 @@ public class BattleUI : MonoBehaviour
     ProjectBoard _projectBoard;
 #pragma warning restore
 
+    Text _reaCardTimeText;
+
     public void StateChange(BattleManager.eBattleState state)
     {
         switch(state)
@@ -95,12 +97,19 @@ public class BattleUI : MonoBehaviour
     }
 
     public void ShowPickedCard(int[] pickedCardArr)
-    {
+    {   
         _projectBoard.ShowPickedCard(pickedCardArr);
+        _reaCardTimeText = _stateObj[(int)BattleManager.eBattleState.ReadCard].GetComponentInChildren<Text>();
+    }
+
+    public void ShowReadCardTime(int time)
+    {
+        _reaCardTimeText.text = time.ToString();
     }
 
     public void ExitButton()
     {
+        //TODO Send Packet To Server
         SceneControlManager._instance.StartLoadLobbyScene();
     }
 }

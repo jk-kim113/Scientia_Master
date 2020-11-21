@@ -10,10 +10,10 @@ public class BattleManager : MonoBehaviour
     public enum eBattleState
     {
         GameWait,
-        ReadCard,
+        GameStart,
+        ReadCard = 1,
         GamePlaying,
 
-        
         WaitServer
     }
 
@@ -49,14 +49,16 @@ public class BattleManager : MonoBehaviour
                 if(_timeGoal < 0)
                 {
                     //TODO Inform Server
-                    _currentBattleState = eBattleState.WaitServer;
+                    StateChange(eBattleState.WaitServer);
                 }
+
+                UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowReadCardTime((int)_timeGoal);
 
                 break;
         }
     }
 
-    void StateChange(eBattleState state)
+    public void StateChange(eBattleState state)
     {
         _currentBattleState = state;
         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).StateChange(_currentBattleState);
@@ -70,7 +72,6 @@ public class BattleManager : MonoBehaviour
             case eBattleState.ReadCard:
 
                 _timeGoal = 30.0f;
-                //TODO Show UI 
 
                 break;
         }

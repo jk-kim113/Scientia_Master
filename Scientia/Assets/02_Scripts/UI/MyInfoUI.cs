@@ -20,8 +20,6 @@ public class MyInfoUI : MonoBehaviour
     Transform _cardInvenTr;
 #pragma warning restore
 
-    GameObject _prefabCardObj;
-
     List<MyInfoCardObj> _cardList = new List<MyInfoCardObj>();
     List<int> _myDeckList = new List<int>();
 
@@ -40,11 +38,11 @@ public class MyInfoUI : MonoBehaviour
                 TableManager._instance.Get(eTableType.CardTabData).ToS(n + 1, "KoreanName"), n + 1);
         }
 
-        _prefabCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "CardObj");
+        GameObject prefabCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "MyInfoCardObj");
 
         for (int n = 0; n < TableManager._instance.Get(eTableType.CardData)._datas.Count; n++)
         {
-            MyInfoCardObj card = Instantiate(_prefabCardObj, _cardInvenTr).GetComponent<MyInfoCardObj>();
+            MyInfoCardObj card = Instantiate(prefabCardObj, _cardInvenTr).GetComponent<MyInfoCardObj>();
             card.InitCard(
                 ResourcePoolManager._instance.GetObj<Sprite>(
                     ResourcePoolManager.eResourceKind.Image, 

@@ -84,18 +84,12 @@ public class CreateRoomUI : MonoBehaviour
         if(!string.IsNullOrEmpty(_nameField.text))
         {
             if(_pwCheckToggle.isOn && string.IsNullOrEmpty(_pwField.text))
-            {
-                //TODO Sytem message Empty pw field
-            }
+                SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Room_Pw_NonEnter);
             else
-            {
                 ClientManager._instance.CreateRoom(_nameField.text, _pwCheckToggle.isOn, _pwField.text, _modeDrop.itemText.text, _ruleDrop.itemText.text);
-            }
         }
         else
-        {
-            //TODO Sytem Message Empty name field
-        }
+            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Room_Name_NonEnter);
     }
 
     public void ExitButton()

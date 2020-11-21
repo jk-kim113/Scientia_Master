@@ -133,9 +133,7 @@ public class CardInfoUI : MonoBehaviour, IPointerClickHandler, IPointerDownHandl
         if(!_lockObj.activeSelf)
             UIManager._instance.GetWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI).AddMyDeck(index);
         else
-        {
-            //TODO System Message Please Lock
-        }
+            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.UnLockCard);
     }
 
     void DeleteMyDeck(int index)

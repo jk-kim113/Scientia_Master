@@ -11,24 +11,19 @@ public class ProjectBoard : MonoBehaviour
 #pragma warning restore
 
     List<GameCardObj> _cardList = new List<GameCardObj>();
-    GameObject _prefabGameCardObj;
-
-    private void Start()
-    {
-        //TODO Add Table
-        _prefabGameCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "GameCardObj") as GameObject;
-    }
 
     public void ShowPickedCard(int[] pickedCardArr)
     {
         if (pickedCardArr.Length > _cardList.Count)
             _cardList.Capacity = pickedCardArr.Length;
 
+        GameObject prefabGameCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "GameCardObj") as GameObject;
+
         for (int n = 0; n < pickedCardArr.Length; n++)
         {
             if(_cardList[n] == null)
-            {
-                GameCardObj card = Instantiate(_prefabGameCardObj, _cardSpawnTr).GetComponent<GameCardObj>();
+            {   
+                GameCardObj card = Instantiate(prefabGameCardObj, _cardSpawnTr).GetComponent<GameCardObj>();
                 _cardList[n] = card;
             }
 

@@ -283,13 +283,13 @@ public class ClientManager : TSingleton<ClientManager>
 
                     case DefinedProtocol.eToClient.CannotPlay:
 
-                        //TODO System Message 게임을 시작할 수 없습니다.
+                        SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Error_GameStart);
 
                         break;
 
                     case DefinedProtocol.eToClient.GameStart:
 
-                        //TODO Game Start
+                        BattleManager._instance.StateChange(BattleManager.eBattleState.GameStart);
 
                         break;
 
@@ -298,6 +298,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_PickedCard pPickedCard = new DefinedStructure.P_PickedCard();
                         pPickedCard = (DefinedStructure.P_PickedCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickedCard.GetType(), pToClient._totalSize);
 
+                        BattleManager._instance.StateChange(BattleManager.eBattleState.ReadCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowPickedCard(pPickedCard._pickedCardArr);
 
                         break;

@@ -21,7 +21,11 @@ public class SystemMessageUI : MonoBehaviour
         ID_Rule,
         Pw_Rule,
         NickName_Rule,
-        ID_Non_Overlap
+        ID_Non_Overlap,
+        Room_Name_NonEnter,
+        Room_Pw_NonEnter,
+        UnLockCard,
+        Error_GameStart
     }
 
 #pragma warning disable 0649
