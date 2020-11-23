@@ -16,6 +16,8 @@ public class DefinedStructure
         public byte[] _data;
     }
 
+    //[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1)] // 한글
+
     #region FromClient
     [StructLayout(LayoutKind.Sequential)]
     public struct P_Send_ID_Pw
@@ -206,6 +208,13 @@ public class DefinedStructure
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12)]
         public int[] _pickedCardArr;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ThisTurn
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
     }
     #endregion
 }

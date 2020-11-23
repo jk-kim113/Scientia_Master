@@ -14,6 +14,10 @@ public class BattleInfo : MonoBehaviour
     GameObject _masterIcon;
     [SerializeField]
     Image _stateImg;
+    [SerializeField]
+    GameObject _connectObj;
+    [SerializeField]
+    GameObject _disConnectObj;
 #pragma warning restore
 
     bool _isEmpty;
@@ -32,6 +36,14 @@ public class BattleInfo : MonoBehaviour
         _nickNameText.text = string.Empty;
         _levelText.text = string.Empty;
         _masterIcon.SetActive(false);
+
+        ConnectState(!_isEmpty);
+    }
+
+    void ConnectState(bool isConnect)
+    {
+        _connectObj.SetActive(isConnect);
+        _disConnectObj.SetActive(!isConnect);
     }
 
     public void ShowInfo(int myindex, string nickName, int level, bool isReady)
@@ -40,13 +52,14 @@ public class BattleInfo : MonoBehaviour
         _isEmpty = false;
         _nickNameText.text = nickName;
         _levelText.text = level.ToString();
+        ConnectState(!_isEmpty);
         ReadyState(isReady);
     }
 
     public void ReadyState(bool isReady)
     {
         if(isReady)
-            _stateImg.color = Color.yellow;
+            _stateImg.color = Color.red;
         else
             _stateImg.color = Color.white;
     }

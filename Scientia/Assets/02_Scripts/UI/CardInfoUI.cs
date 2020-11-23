@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class CardInfoUI : MonoBehaviour, IPointerClickHandler, IPointerDownHandler
 {
-
     public enum eCardState
     {
         Normal,

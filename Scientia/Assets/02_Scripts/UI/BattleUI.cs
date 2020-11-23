@@ -18,20 +18,25 @@ public class BattleUI : MonoBehaviour
 
     Text _reaCardTimeText;
 
-    public void StateChange(BattleManager.eBattleState state)
+    private void Start()
+    {
+        _reaCardTimeText = _stateObj[(int)BattleManager.eReadyState.ReadCard].GetComponentInChildren<Text>();
+    }
+
+    public void StateChange(BattleManager.eReadyState state)
     {
         switch(state)
         {
-            case BattleManager.eBattleState.GameWait:
-            case BattleManager.eBattleState.ReadCard:
-            case BattleManager.eBattleState.GamePlaying:
+            case BattleManager.eReadyState.GameWait:
+            case BattleManager.eReadyState.ReadCard:
+            case BattleManager.eReadyState.GamePlaying:
 
                 for (int n = 0; n < _stateObj.Length; n++)
                     _stateObj[n].SetActive((int)state == n);
 
                 break;
 
-            case BattleManager.eBattleState.WaitServer:
+            case BattleManager.eReadyState.WaitServer:
 
                 for (int n = 0; n < _stateObj.Length; n++)
                 {
@@ -99,7 +104,6 @@ public class BattleUI : MonoBehaviour
     public void ShowPickedCard(int[] pickedCardArr)
     {   
         _projectBoard.ShowPickedCard(pickedCardArr);
-        _reaCardTimeText = _stateObj[(int)BattleManager.eBattleState.ReadCard].GetComponentInChildren<Text>();
     }
 
     public void ShowReadCardTime(int time)

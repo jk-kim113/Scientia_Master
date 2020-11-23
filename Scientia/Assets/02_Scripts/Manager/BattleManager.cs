@@ -9,10 +9,19 @@ public class BattleManager : MonoBehaviour
 
     public enum eBattleState
     {
+        Ready,
+        Progress,
+        End,
+        Result
+    }
+
+    public enum eReadyState
+    {
         GameWait,
         GameStart,
         ReadCard = 1,
-        GamePlaying,
+        PickCard,
+        GamePlaying = 2,
 
         WaitServer
     }
@@ -20,13 +29,15 @@ public class BattleManager : MonoBehaviour
     int _roomNumber;
     public int _RoomNumber { get { return _roomNumber; } set { _roomNumber = value; } }
 
-
     float _timeGoal;
     eBattleState _currentBattleState;
+    eReadyState _currentReadyState;
 
     private void Awake()
     {
         _uniqueInstance = this;
+
+        _currentBattleState = eBattleState.Ready;
 
         UIManager._instance.Close(UIManager.eKindWindow.CreateRoomUI);
         UIManager._instance.Close(UIManager.eKindWindow.LobbyUI);
@@ -36,20 +47,20 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-        StateChange(eBattleState.GameWait);
+        ReadyStateChange(eReadyState.GameWait);
     }
 
     private void Update()
     {
-        switch(_currentBattleState)
+        switch(_currentReadyState)
         {
-            case eBattleState.ReadCard:
+            case eReadyState.ReadCard:
 
                 _timeGoal -= Time.deltaTime;
                 if(_timeGoal < 0)
                 {
-                    //TODO Inform Server
-                    StateChange(eBattleState.WaitServer);
+                    ReadyStateChange(eReadyState.WaitServer);
+                    ClientManager._instance.FinishReadCard();
                 }
 
                 UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowReadCardTime((int)_timeGoal);
@@ -58,20 +69,26 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void StateChange(eBattleState state)
+    public void ReadyStateChange(eReadyState state)
     {
-        _currentBattleState = state;
-        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).StateChange(_currentBattleState);
+        _currentReadyState = state;
+        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).StateChange(_currentReadyState);
 
         switch (state)
         {
-            case eBattleState.GameWait:
+            case eReadyState.GameWait:
 
                 break;
 
-            case eBattleState.ReadCard:
+            case eReadyState.ReadCard:
 
                 _timeGoal = 30.0f;
+
+                break;
+
+            case eReadyState.PickCard:
+
+
 
                 break;
         }

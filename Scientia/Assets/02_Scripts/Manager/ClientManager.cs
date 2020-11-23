@@ -222,7 +222,8 @@ public class ClientManager : TSingleton<ClientManager>
                     #region Room
                     case DefinedProtocol.eToClient.EnterRoom:
 
-                        SceneControlManager._instance.StartLoadBattleScene();
+                        if(SceneControlManager._instance._nowScene != SceneControlManager.eTypeScene.Battle)
+                            SceneControlManager._instance.StartLoadBattleScene();
 
                         DefinedStructure.P_UserInfo pUserInfo = new DefinedStructure.P_UserInfo();
                         pUserInfo = (DefinedStructure.P_UserInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pUserInfo.GetType(), pToClient._totalSize);
@@ -289,7 +290,7 @@ public class ClientManager : TSingleton<ClientManager>
 
                     case DefinedProtocol.eToClient.GameStart:
 
-                        BattleManager._instance.StateChange(BattleManager.eBattleState.GameStart);
+                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.GameStart);
 
                         break;
 
@@ -298,8 +299,17 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_PickedCard pPickedCard = new DefinedStructure.P_PickedCard();
                         pPickedCard = (DefinedStructure.P_PickedCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickedCard.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.StateChange(BattleManager.eBattleState.ReadCard);
+                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.ReadCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowPickedCard(pPickedCard._pickedCardArr);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.PickCard:
+
+                        DefinedStructure.P_ThisTurn pPickCard = new DefinedStructure.P_ThisTurn();
+                        pPickCard = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickCard.GetType(), pToClient._totalSize);
+
+                        // TODO Pick Card
 
                         break;
                 }
@@ -424,6 +434,14 @@ public class ClientManager : TSingleton<ClientManager>
         pInformGameStart._roomNumber = BattleManager._instance._RoomNumber;
 
         ToPacket(DefinedProtocol.eFromClient.InformGameStart, pInformGameStart);
+    }
+
+    public void FinishReadCard()
+    {
+        DefinedStructure.P_InformRoomInfo pFinishReadCard;
+        pFinishReadCard._roomNumber = BattleManager._instance._RoomNumber;
+
+        ToPacket(DefinedProtocol.eFromClient.FinishReadCard, pFinishReadCard);
     }
 
     void GetMyCharacterInfo()

@@ -19,6 +19,7 @@ public class DefinedProtocol
         TryEnterRoom,
         InformReady,
         InformGameStart,
+        FinishReadCard,
 
         ConnectionTerminate,
 
@@ -44,6 +45,7 @@ public class DefinedProtocol
         CannotPlay,
         GameStart,
         ShowPickedCard,
+        PickCard,
 
         max
     }

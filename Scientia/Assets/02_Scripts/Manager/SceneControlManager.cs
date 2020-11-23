@@ -24,6 +24,7 @@ public class SceneControlManager : TSingleton<SceneControlManager>
     }
 
     eTypeScene _currentScene;
+    public eTypeScene _nowScene { get { return _currentScene; } }
     eTypeScene _prevScene;
     eStateLoadding _loadState;
 
