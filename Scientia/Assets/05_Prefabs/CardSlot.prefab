@@ -537,6 +537,7 @@ MonoBehaviour:
   - {fileID: 2661975645851220737}
   - {fileID: 1627107581555210205}
   - {fileID: 7283195773503073614}
+  _panelImg: {fileID: 5692269714117369948}
 --- !u!1 &6467894024518853063
 GameObject:
   m_ObjectHideFlags: 0

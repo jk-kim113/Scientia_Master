@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
         GameStart,
         ReadCard = 1,
         PickCard,
-        GamePlaying = 2,
+        SelectionAction,
 
         WaitServer
     }
@@ -32,6 +32,7 @@ public class BattleManager : MonoBehaviour
     float _timeGoal;
     eBattleState _currentBattleState;
     eReadyState _currentReadyState;
+    public eReadyState _nowReadyState { get { return _currentReadyState; } }
 
     private void Awake()
     {
@@ -76,19 +77,9 @@ public class BattleManager : MonoBehaviour
 
         switch (state)
         {
-            case eReadyState.GameWait:
-
-                break;
-
             case eReadyState.ReadCard:
 
                 _timeGoal = 30.0f;
-
-                break;
-
-            case eReadyState.PickCard:
-
-
 
                 break;
         }

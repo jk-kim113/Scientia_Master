@@ -20,6 +20,7 @@ public class DefinedProtocol
         InformReady,
         InformGameStart,
         FinishReadCard,
+        PickCard,
 
         ConnectionTerminate,
 
@@ -46,6 +47,8 @@ public class DefinedProtocol
         GameStart,
         ShowPickedCard,
         PickCard,
+        ShowPickCard,
+        ChooseAction,
 
         max
     }

@@ -8,6 +8,8 @@ public class CardSlot : MonoBehaviour
 #pragma warning disable 0649
     [SerializeField]
     Image[] _cardImgArr;
+    [SerializeField]
+    Image _panelImg;
 #pragma warning restore
 
     int _initOpenCnt = 2;
@@ -56,5 +58,19 @@ public class CardSlot : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void ShowTurn(bool isTurn)
+    {
+        if(isTurn)
+            _panelImg.color = Color.blue;
+        else
+            _panelImg.color = Color.white;
+    }
+
+    public void ShowAddCard(int slotIndex, int cardIndex)
+    {
+        _cardImgArr[slotIndex].sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image,
+            TableManager._instance.Get(eTableType.CardData).ToS(cardIndex, "Name"));
     }
 }

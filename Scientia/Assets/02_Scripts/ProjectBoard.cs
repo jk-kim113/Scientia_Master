@@ -30,7 +30,7 @@ public class ProjectBoard : MonoBehaviour
                     ResourcePoolManager._instance.GetObj<Sprite>(
                     ResourcePoolManager.eResourceKind.Image,
                     TableManager._instance.Get(eTableType.CardData).ToS(pickedCardArr[n], "Name")),
-                    n,
+                    pickedCardArr[n],
                     2);
             _cardList[n].gameObject.SetActive(true);
         }

@@ -213,8 +213,8 @@ public class ClientManager : TSingleton<ClientManager>
 
                     case DefinedProtocol.eToClient.CompleteAddReleaseCard:
 
-                        CardInfoUI cardInfoUI = UIManager._instance.GetWnd<CardInfoUI>(UIManager.eKindWindow.CardInfoUI);
-                        cardInfoUI.EndUnlock();
+                        MyCardUI myCardUI = UIManager._instance.GetWnd<MyCardUI>(UIManager.eKindWindow.MyCardUI);
+                        myCardUI.EndUnlock();
 
                         break;
                     #endregion
@@ -309,8 +309,26 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ThisTurn pPickCard = new DefinedStructure.P_ThisTurn();
                         pPickCard = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickCard.GetType(), pToClient._totalSize);
 
-                        Debug.Log("Pick Card");
-                        // TODO Pick Card
+                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.PickCard);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).PickCardTurn(pPickCard._index);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowPickCard:
+
+                        DefinedStructure.P_ShowPickCard pShowPickCard = new DefinedStructure.P_ShowPickCard();
+                        pShowPickCard = (DefinedStructure.P_ShowPickCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowPickCard.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowAddCard(pShowPickCard._index, pShowPickCard._slotIndex, pShowPickCard._cardIndex);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ChooseAction:
+
+                        DefinedStructure.P_ThisTurn pChooseAction = new DefinedStructure.P_ThisTurn();
+                        pChooseAction = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pChooseAction.GetType(), pToClient._totalSize);
+
+                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.SelectionAction);
 
                         break;
                 }
@@ -443,6 +461,20 @@ public class ClientManager : TSingleton<ClientManager>
         pFinishReadCard._roomNumber = BattleManager._instance._RoomNumber;
 
         ToPacket(DefinedProtocol.eFromClient.FinishReadCard, pFinishReadCard);
+    }
+
+    public void PickCard(int cardIndex)
+    {
+        DefinedStructure.P_PickCard pPickCard;
+        pPickCard._roomNumber = BattleManager._instance._RoomNumber;
+        pPickCard._cardIndex = cardIndex;
+
+        ToPacket(DefinedProtocol.eFromClient.PickCard, pPickCard);
+    }
+
+    public void SelectAction(int action)
+    {
+        //TODO Send Packet
     }
 
     void GetMyCharacterInfo()

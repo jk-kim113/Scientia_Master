@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class BattleUI : MonoBehaviour
 {
+    public enum eActionKind
+    {
+        GetCard,
+        RotateCard
+    }
+
 #pragma warning disable 0649
     [SerializeField]
     BattleInfo[] _userInfoArr;
@@ -14,6 +20,8 @@ public class BattleUI : MonoBehaviour
     Button _actionBtn;
     [SerializeField]
     ProjectBoard _projectBoard;
+    [SerializeField]
+    CardSlot[] _cardSlotArr;
 #pragma warning restore
 
     Text _reaCardTimeText;
@@ -29,7 +37,8 @@ public class BattleUI : MonoBehaviour
         {
             case BattleManager.eReadyState.GameWait:
             case BattleManager.eReadyState.ReadCard:
-            case BattleManager.eReadyState.GamePlaying:
+            case BattleManager.eReadyState.PickCard:
+            case BattleManager.eReadyState.SelectionAction:
 
                 for (int n = 0; n < _stateObj.Length; n++)
                     _stateObj[n].SetActive((int)state == n);
@@ -109,6 +118,27 @@ public class BattleUI : MonoBehaviour
     public void ShowReadCardTime(int time)
     {
         _reaCardTimeText.text = time.ToString();
+    }
+
+    public void PickCardTurn(int index)
+    {
+        for(int n = 0; n < _cardSlotArr.Length; n++)
+            _cardSlotArr[n].ShowTurn(n == index);
+    }
+
+    public void ShowAddCard(int index, int slotIndex, int cardIndex)
+    {
+        _cardSlotArr[index].ShowAddCard(slotIndex, cardIndex);
+    }
+
+    public void GetCardAction()
+    {
+        ClientManager._instance.SelectAction((int)eActionKind.GetCard);
+    }
+
+    public void RotateCardAction()
+    {
+        ClientManager._instance.SelectAction((int)eActionKind.RotateCard);
     }
 
     public void ExitButton()
