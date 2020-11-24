@@ -256,7 +256,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -2085203293505510451}
+      - m_Target: {fileID: 6314589506961316726}
         m_MethodName: EnrollButton
         m_Mode: 1
         m_Arguments:
@@ -748,7 +748,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -2085203293505510451}
+      - m_Target: {fileID: 6314589506961316726}
         m_MethodName: LogInButton
         m_Mode: 1
         m_Arguments:
@@ -1188,7 +1188,7 @@ GameObject:
   - component: {fileID: 2281396899164496846}
   - component: {fileID: 2281396899164496845}
   - component: {fileID: 2281396899164496844}
-  - component: {fileID: -2085203293505510451}
+  - component: {fileID: 6314589506961316726}
   m_Layer: 5
   m_Name: LogInUI
   m_TagString: Untagged
@@ -1276,7 +1276,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &-2085203293505510451
+--- !u!114 &6314589506961316726
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1285,7 +1285,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2281396899164496843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2700ce567f0d3e445b8152f9a68da47f, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e4fe95310000000096fe95310000000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _idField: {fileID: 2281396898508962985}

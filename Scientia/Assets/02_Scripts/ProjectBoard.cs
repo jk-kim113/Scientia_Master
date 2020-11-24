@@ -14,17 +14,16 @@ public class ProjectBoard : MonoBehaviour
 
     public void ShowPickedCard(int[] pickedCardArr)
     {
-        if (pickedCardArr.Length > _cardList.Count)
-            _cardList.Capacity = pickedCardArr.Length;
+        gameObject.SetActive(true);
 
-        GameObject prefabGameCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "GameCardObj") as GameObject;
+        GameObject prefabGameCardObj = ResourcePoolManager._instance.GetObj<GameObject>(ResourcePoolManager.eResourceKind.Prefab, "GameCardObj");
 
         for (int n = 0; n < pickedCardArr.Length; n++)
         {
-            if(_cardList[n] == null)
+            if(n >= _cardList.Count)
             {   
                 GameCardObj card = Instantiate(prefabGameCardObj, _cardSpawnTr).GetComponent<GameCardObj>();
-                _cardList[n] = card;
+                _cardList.Add(card);
             }
 
             _cardList[n].InitCard(

@@ -6,11 +6,11 @@ using System.Net.Sockets;
 
 public class ClientManager : TSingleton<ClientManager>
 {
-    //const string _ip = "1.235.143.68";
-    //const int _port = 100;
+    const string _ip = "1.235.143.68";
+    const int _port = 100;
 
-    const string _ip = "127.0.0.1";
-    const int _port = 80;
+    //const string _ip = "127.0.0.1";
+    //const int _port = 80;
 
     Socket _server;
 
@@ -309,6 +309,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ThisTurn pPickCard = new DefinedStructure.P_ThisTurn();
                         pPickCard = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickCard.GetType(), pToClient._totalSize);
 
+                        Debug.Log("Pick Card");
                         // TODO Pick Card
 
                         break;

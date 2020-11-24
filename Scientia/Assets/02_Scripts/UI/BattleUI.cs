@@ -58,7 +58,7 @@ public class BattleUI : MonoBehaviour
         {
             for(int n = 1; n < 4; n++)
             {
-                if(!_userInfoArr[n]._IsEmpty)
+                if(_userInfoArr[n]._IsEmpty)
                 {
                     _userInfoArr[n].ShowInfo(index, nickName, level, isReady);
                     return;
