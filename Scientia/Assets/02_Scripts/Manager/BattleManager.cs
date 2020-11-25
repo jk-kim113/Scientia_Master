@@ -32,6 +32,7 @@ public class BattleManager : MonoBehaviour
 
     float _timeGoal;
     eBattleState _currentBattleState;
+    public eBattleState _nowBattleState { get { return _currentBattleState; } set { _currentBattleState = value; } }
     eReadyState _currentReadyState;
     public eReadyState _nowReadyState { get { return _currentReadyState; } }
 

@@ -21,6 +21,10 @@ public class DefinedProtocol
         InformGameStart,
         FinishReadCard,
         PickCard,
+        SelectAction,
+        PickCardInProgress,
+        RotateInfo,
+        FinishRotate,
 
         ConnectionTerminate,
 
@@ -49,6 +53,9 @@ public class DefinedProtocol
         PickCard,
         ShowPickCard,
         ChooseAction,
+        GetCard,
+        RotateCard,
+        ShowRotateInfo,
 
         max
     }

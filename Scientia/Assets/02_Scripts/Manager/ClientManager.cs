@@ -328,7 +328,35 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ThisTurn pChooseAction = new DefinedStructure.P_ThisTurn();
                         pChooseAction = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pChooseAction.GetType(), pToClient._totalSize);
 
+                        BattleManager._instance._nowBattleState = BattleManager.eBattleState.Progress;
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChooseAction(pChooseAction._index);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.GetCard:
+
+                        DefinedStructure.P_GetCard pGetCard = new DefinedStructure.P_GetCard();
+                        pGetCard = (DefinedStructure.P_GetCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pGetCard.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).GetCardState(pGetCard._index);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.RotateCard:
+
+                        DefinedStructure.P_InformRotateCard pInformRotateCard = new DefinedStructure.P_InformRotateCard();
+                        pInformRotateCard = (DefinedStructure.P_InformRotateCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pInformRotateCard.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).RotateCardState(pInformRotateCard._index, pInformRotateCard._cardArr, pInformRotateCard._turnCount);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowRotateInfo:
+
+                        DefinedStructure.P_ShowRotateInfo pShowRotateInfo = new DefinedStructure.P_ShowRotateInfo();
+                        pShowRotateInfo = (DefinedStructure.P_ShowRotateInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowRotateInfo.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowRotate(pShowRotateInfo._index, pShowRotateInfo._rotateValue);
 
                         break;
                 }
@@ -474,7 +502,41 @@ public class ClientManager : TSingleton<ClientManager>
 
     public void SelectAction(int action)
     {
-        //TODO Send Packet
+        DefinedStructure.P_SelectAction pSelectAction;
+        pSelectAction._roomNumber = BattleManager._instance._RoomNumber;
+        pSelectAction._selectType = action;
+
+        ToPacket(DefinedProtocol.eFromClient.SelectAction, pSelectAction);
+    }
+
+    public void PickCardInProgress(int cardIndex)
+    {
+        DefinedStructure.P_PickCard pPickCard;
+        pPickCard._roomNumber = BattleManager._instance._RoomNumber;
+        pPickCard._cardIndex = cardIndex;
+
+        ToPacket(DefinedProtocol.eFromClient.PickCardInProgress, pPickCard);
+    }
+
+    public void RotateInfo(int index, float rotateValue)
+    {
+        DefinedStructure.P_RotateInfo pRotateInfo;
+        pRotateInfo._roomNumber = BattleManager._instance._RoomNumber;
+        pRotateInfo._index = index;
+        pRotateInfo._rotateValue = rotateValue;
+
+        ToPacket(DefinedProtocol.eFromClient.RotateInfo, pRotateInfo);
+    }
+
+    public void FinishRotateCard(int[] cardRotateCnt)
+    {
+        DefinedStructure.P_FinishRotate pFinishRotate;
+        pFinishRotate._roomNumber = BattleManager._instance._RoomNumber;
+        pFinishRotate._rotateCardInfoArr = new int[4];
+        for (int n = 0; n < cardRotateCnt.Length; n++)
+            pFinishRotate._rotateCardInfoArr[n] = cardRotateCnt[n];
+
+        ToPacket(DefinedProtocol.eFromClient.FinishRotate, pFinishRotate);
     }
 
     void GetMyCharacterInfo()

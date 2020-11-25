@@ -24,15 +24,38 @@ public class BattleUI : MonoBehaviour
     CardSlot[] _cardSlotArr;
     [SerializeField]
     Text _informText;
+    [SerializeField]
+    GameObject _rotateCardObj;
+    [SerializeField]
+    Text _turnCntText;
 #pragma warning restore
 
     Text _reaCardTimeText;
+    RotateCard[] _rotateCardArr;
 
     public bool _IsMyTurn { get; set; }
+
+    int _turnCount;
+    public int _TurnCount { get { return _turnCount; } }
+
+    int _currentTurn;
+    public int _nowTurn 
+    { 
+        get
+        {
+            return _currentTurn;
+        }
+        set
+        {
+            _currentTurn = value;
+            _turnCntText.text = "남은 회전 횟수 : " + _currentTurn.ToString();
+        }
+    }
 
     private void Start()
     {
         _reaCardTimeText = _stateObj[(int)BattleManager.eReadyState.ReadCard].GetComponentInChildren<Text>();
+        _rotateCardArr = _rotateCardObj.GetComponentsInChildren<RotateCard>();
     }
 
     public void StateChange(BattleManager.eReadyState state)
@@ -182,6 +205,71 @@ public class BattleUI : MonoBehaviour
     public void RotateCardAction()
     {
         ClientManager._instance.SelectAction((int)eActionKind.RotateCard);
+    }
+
+    public void GetCardState(int index)
+    {
+        _IsMyTurn = _userInfoArr[0]._MyIndex == index;
+
+        _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+
+        _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
+        _informText.text = "카드 고르는중...";
+    }
+
+    public void RotateCardState(int index, int[] cardState, int turnCount)
+    {
+        _IsMyTurn = _userInfoArr[0]._MyIndex == index;
+        _turnCount = turnCount;
+        _currentTurn = 0;
+
+        _rotateCardObj.SetActive(true);
+
+        for(int n = 0; n < _rotateCardArr.Length; n++)
+        {
+            switch(cardState[n])
+            {
+                case 0:
+
+                    _rotateCardArr[n].InitCard(ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "EmptyCardSlot"), RotateCard.eCardType.Empty, n);
+
+                    break;
+                case -1:
+
+                    _rotateCardArr[n].InitCard(ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "CloseCardSlot"), RotateCard.eCardType.Lock, n);
+
+                    break;
+                default:
+
+                    _rotateCardArr[n].InitCard(
+                        ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(cardState[n], "Name")), 
+                        RotateCard.eCardType.Rotatable,
+                        n);
+
+                    break;
+            }
+        }
+    }
+
+    public void FinishRotateCard()
+    {
+        if(_turnCount == 0)
+        {
+            //TODO System Message Rotate at least one more
+
+            return;
+        }
+
+        int[] rotateCnt = new int[4];
+        for (int n = 0; n < _rotateCardArr.Length; n++)
+            rotateCnt[n] = _rotateCardArr[n]._MyRotateCount;
+
+        ClientManager._instance.FinishRotateCard(rotateCnt);
+    }
+
+    public void ShowRotate(int index, float rotateValue)
+    {
+        _rotateCardArr[index].SetRotation(rotateValue);
     }
 
     public void ExitButton()
