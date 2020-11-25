@@ -11,7 +11,7 @@ public class BattleCardUI : CardInfoUI, IPointerClickHandler
     {
         base.InitCardInfo(cardImg, cardName, cardInfo, cardIndex);
 
-        if (BattleManager._instance._nowReadyState == BattleManager.eReadyState.PickCard)
+        if (UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._IsMyTurn)
         {
             _actionButton.GetComponentInChildren<Text>().text = "슬롯에 추가";
             _actionButton.onClick.AddListener(() => AddToCardSlot());

@@ -22,9 +22,13 @@ public class BattleUI : MonoBehaviour
     ProjectBoard _projectBoard;
     [SerializeField]
     CardSlot[] _cardSlotArr;
+    [SerializeField]
+    Text _informText;
 #pragma warning restore
 
     Text _reaCardTimeText;
+
+    public bool _IsMyTurn { get; set; }
 
     private void Start()
     {
@@ -38,7 +42,6 @@ public class BattleUI : MonoBehaviour
             case BattleManager.eReadyState.GameWait:
             case BattleManager.eReadyState.ReadCard:
             case BattleManager.eReadyState.PickCard:
-            case BattleManager.eReadyState.SelectionAction:
 
                 for (int n = 0; n < _stateObj.Length; n++)
                     _stateObj[n].SetActive((int)state == n);
@@ -52,6 +55,12 @@ public class BattleUI : MonoBehaviour
                     if(_stateObj[n].activeSelf)
                         _stateObj[n].SetActive(false);
                 }
+
+                break;
+
+            case BattleManager.eReadyState.GameStart:
+
+                AllReadyCancel();
 
                 break;
         }
@@ -76,12 +85,19 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void ShowMaster(bool isMaster)
+    public void ShowMaster(int masterIndex)
     {
-        _actionBtn.GetComponentInChildren<Text>().text = isMaster ? "시작하기" : "준비하기";
-        _userInfoArr[0].ShowMaster(isMaster);
+        for(int n = 0; n < _userInfoArr.Length; n++)
+        {
+            if (_userInfoArr[n]._MyIndex == masterIndex)
+                _userInfoArr[n].ShowMaster(true);
+            else
+                _userInfoArr[n].ShowMaster(false);
+        }
 
-        if (isMaster)
+        _actionBtn.GetComponentInChildren<Text>().text = _userInfoArr[0]._MyIndex == masterIndex ? "시작하기" : "준비하기";
+
+        if (_userInfoArr[0]._MyIndex == masterIndex)
             _actionBtn.onClick.AddListener(() => { InformGameStart(); });
         else
             _actionBtn.onClick.AddListener(() => { InformGameReady(); });
@@ -110,6 +126,14 @@ public class BattleUI : MonoBehaviour
         }
     }
 
+    void AllReadyCancel()
+    {
+        for(int n = 0; n < _userInfoArr.Length; n++)
+        {
+            _userInfoArr[n].ReadyState(false);
+        }
+    }
+
     public void ShowPickedCard(int[] pickedCardArr)
     {   
         _projectBoard.ShowPickedCard(pickedCardArr);
@@ -122,13 +146,32 @@ public class BattleUI : MonoBehaviour
 
     public void PickCardTurn(int index)
     {
+        _IsMyTurn = _userInfoArr[0]._MyIndex == index;
+
         for(int n = 0; n < _cardSlotArr.Length; n++)
             _cardSlotArr[n].ShowTurn(n == index);
+
+        for(int n = 0; n < _userInfoArr.Length; n++)
+        {
+            if (_userInfoArr[n]._MyIndex == index)
+                _userInfoArr[n].ShowTurn(true);
+            else
+                _userInfoArr[n].ShowTurn(false);
+        }
     }
 
     public void ShowAddCard(int index, int slotIndex, int cardIndex)
     {
         _cardSlotArr[index].ShowAddCard(slotIndex, cardIndex);
+    }
+
+    public void ChooseAction(int index)
+    {
+        _projectBoard.gameObject.SetActive(false);
+
+        _stateObj[(int)BattleManager.eReadyState.SelectionAction].gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+        _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
+        _informText.text = "행동 선택중...";
     }
 
     public void GetCardAction()

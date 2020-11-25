@@ -23,7 +23,7 @@ public class BattleInfo : MonoBehaviour
     bool _isEmpty;
     public bool _IsEmpty { get { return _isEmpty; } }
 
-    int _myIndex;
+    int _myIndex = -1;
     public int _MyIndex { get { return _myIndex; } }
 
     private void Awake()
@@ -60,6 +60,14 @@ public class BattleInfo : MonoBehaviour
     {
         if(isReady)
             _stateImg.color = Color.red;
+        else
+            _stateImg.color = Color.white;
+    }
+
+    public void ShowTurn(bool isTurn)
+    {
+        if (isTurn)
+            _stateImg.color = Color.blue;
         else
             _stateImg.color = Color.white;
     }

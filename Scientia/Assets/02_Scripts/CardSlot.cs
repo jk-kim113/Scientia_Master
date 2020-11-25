@@ -22,12 +22,10 @@ public class CardSlot : MonoBehaviour
 
         for (int n = 0; n < _cardImgArr.Length; n++)
         {
-            //TODO All Close State
-        }
-
-        for(int n = 0; n < _initOpenCnt; n++)
-        {
-            //TODO InitOpen
+            if (n < _initOpenCnt)
+                _cardImgArr[n].sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "EmptyCardSlot");
+            else
+                _cardImgArr[n].sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "CloseCardSlot");
         }
     }
 

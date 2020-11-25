@@ -271,7 +271,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_MasterInfo pMasterInfo = new DefinedStructure.P_MasterInfo();
                         pMasterInfo = (DefinedStructure.P_MasterInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pMasterInfo.GetType(), pToClient._totalSize);
 
-                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowMaster(pMasterInfo._masterName.CompareTo(_currentNickName) == 0);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowMaster(pMasterInfo._masterIndex);
 
                         break;
 
@@ -328,7 +328,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ThisTurn pChooseAction = new DefinedStructure.P_ThisTurn();
                         pChooseAction = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pChooseAction.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.SelectionAction);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChooseAction(pChooseAction._index);
 
                         break;
                 }

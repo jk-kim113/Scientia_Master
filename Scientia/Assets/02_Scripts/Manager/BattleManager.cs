@@ -18,11 +18,12 @@ public class BattleManager : MonoBehaviour
     public enum eReadyState
     {
         GameWait,
-        GameStart,
-        ReadCard = 1,
+        ReadCard,
         PickCard,
         SelectionAction,
 
+
+        GameStart,
         WaitServer
     }
 

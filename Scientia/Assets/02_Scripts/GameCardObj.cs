@@ -26,9 +26,9 @@ public class GameCardObj : CardObj, IPointerClickHandler
     {
         BattleCardUI battleCardUI = UIManager._instance.OpenWnd<BattleCardUI>(UIManager.eKindWindow.BattleCardUI);
         battleCardUI.InitCardInfo(
-            ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(_myIndex + 1, "Name")),
-            TableManager._instance.Get(eTableType.CardData).ToS(_myIndex + 1, "KoreanName"),
-            TableManager._instance.Get(eTableType.CardData).ToS(_myIndex + 1, "Effect"),
+            ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(_myIndex, "Name")),
+            TableManager._instance.Get(eTableType.CardData).ToS(_myIndex, "KoreanName"),
+            TableManager._instance.Get(eTableType.CardData).ToS(_myIndex, "Effect"),
             _myIndex);
     }
 }
