@@ -28,6 +28,8 @@ public class BattleUI : MonoBehaviour
     GameObject _rotateCardObj;
     [SerializeField]
     Text _turnCntText;
+    [SerializeField]
+    GameObject _rotateOkButton;
 #pragma warning restore
 
     Text _reaCardTimeText;
@@ -39,7 +41,7 @@ public class BattleUI : MonoBehaviour
     public int _TurnCount { get { return _turnCount; } }
 
     int _currentTurn;
-    public int _nowTurn 
+    public int _NowTurn 
     { 
         get
         {
@@ -48,9 +50,11 @@ public class BattleUI : MonoBehaviour
         set
         {
             _currentTurn = value;
-            _turnCntText.text = "남은 회전 횟수 : " + _currentTurn.ToString();
+            _turnCntText.text = "남은 회전 횟수 : " + _RestTurnCnt.ToString();
         }
     }
+
+    public int _RestTurnCnt { get { return _turnCount - _currentTurn; } }
 
     private void Start()
     {
@@ -71,6 +75,7 @@ public class BattleUI : MonoBehaviour
 
                 break;
 
+            case BattleManager.eReadyState.DoingAction:
             case BattleManager.eReadyState.WaitServer:
 
                 for (int n = 0; n < _stateObj.Length; n++)
@@ -209,6 +214,7 @@ public class BattleUI : MonoBehaviour
 
     public void GetCardState(int index)
     {
+        StateChange(BattleManager.eReadyState.DoingAction);
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
 
         _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
@@ -219,9 +225,12 @@ public class BattleUI : MonoBehaviour
 
     public void RotateCardState(int index, int[] cardState, int turnCount)
     {
+        _rotateOkButton.SetActive(_userInfoArr[0]._MyIndex == index);
+        StateChange(BattleManager.eReadyState.DoingAction);
+        _informText.gameObject.SetActive(false);
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
         _turnCount = turnCount;
-        _currentTurn = 0;
+        _NowTurn = 0;
 
         _rotateCardObj.SetActive(true);
 
@@ -267,9 +276,10 @@ public class BattleUI : MonoBehaviour
         ClientManager._instance.FinishRotateCard(rotateCnt);
     }
 
-    public void ShowRotate(int index, float rotateValue)
+    public void ShowRotate(int index, float rotateValue, int restCnt)
     {
         _rotateCardArr[index].SetRotation(rotateValue);
+        _turnCntText.text = "남은 회전 횟수 : " + restCnt.ToString();
     }
 
     public void ExitButton()

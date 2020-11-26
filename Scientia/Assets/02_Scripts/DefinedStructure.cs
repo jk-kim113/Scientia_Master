@@ -126,8 +126,10 @@ public class DefinedStructure
         public int _roomNumber;
         [MarshalAs(UnmanagedType.I4)]
         public int _index;
-        [MarshalAs(UnmanagedType.I4)]
+        [MarshalAs(UnmanagedType.R4)]
         public float _rotateValue;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _restCount;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -289,8 +291,10 @@ public class DefinedStructure
     {
         [MarshalAs(UnmanagedType.I4)]
         public int _index;
-        [MarshalAs(UnmanagedType.I4)]
+        [MarshalAs(UnmanagedType.R4)]
         public float _rotateValue;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _restCount;
     }
     #endregion
 }

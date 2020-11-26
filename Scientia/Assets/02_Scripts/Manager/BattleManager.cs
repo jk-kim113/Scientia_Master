@@ -24,7 +24,8 @@ public class BattleManager : MonoBehaviour
 
 
         GameStart,
-        WaitServer
+        WaitServer,
+        DoingAction
     }
 
     int _roomNumber;

@@ -148,16 +148,17 @@ public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 _myRotateCount -= 4;
             }
 
-            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._nowTurn += turnCnt;
+            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._NowTurn += turnCnt;
 
-            int countCheck = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._TurnCount - UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._nowTurn;
+            int countCheck = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._TurnCount
+                                - UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._NowTurn;
 
             if (countCheck >= 0)
                 _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, _currentZ + rotateVal);
             else
             {
                 _myRotateCount += countCheck;
-                UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._nowTurn += countCheck;
+                UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._NowTurn += countCheck;
                 _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, _currentZ + rotateVal + 90 * countCheck);
             }
 

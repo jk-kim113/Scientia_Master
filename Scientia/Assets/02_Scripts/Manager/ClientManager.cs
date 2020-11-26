@@ -87,6 +87,8 @@ public class ClientManager : TSingleton<ClientManager>
             {
                 DefinedStructure.PacketInfo pToClient = _toClientQueue.Dequeue();
 
+                Debug.Log((DefinedProtocol.eToClient)pToClient._id);
+
                 switch ((DefinedProtocol.eToClient)pToClient._id)
                 {
                     #region LogIn / Character
@@ -356,7 +358,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ShowRotateInfo pShowRotateInfo = new DefinedStructure.P_ShowRotateInfo();
                         pShowRotateInfo = (DefinedStructure.P_ShowRotateInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowRotateInfo.GetType(), pToClient._totalSize);
 
-                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowRotate(pShowRotateInfo._index, pShowRotateInfo._rotateValue);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowRotate(pShowRotateInfo._index, pShowRotateInfo._rotateValue, pShowRotateInfo._restCount);
 
                         break;
                 }
@@ -524,6 +526,7 @@ public class ClientManager : TSingleton<ClientManager>
         pRotateInfo._roomNumber = BattleManager._instance._RoomNumber;
         pRotateInfo._index = index;
         pRotateInfo._rotateValue = rotateValue;
+        pRotateInfo._restCount = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._RestTurnCnt;
 
         ToPacket(DefinedProtocol.eFromClient.RotateInfo, pRotateInfo);
     }
