@@ -4,18 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     public enum eCardType
     {
         Lock,
         Empty,
-        Rotatable
+        Rotatable,
+        Selectable
     }
 
 #pragma warning disable 0649
     [SerializeField]
     Image _cardImg;
+    [SerializeField]
+    Image _edgeImg;
 #pragma warning restore
 
     eCardType _cardType = eCardType.Lock;
@@ -65,6 +68,14 @@ public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void SetRotation(float rotateValue)
     {
         _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, rotateValue);
+    }
+
+    public void ShowClick(bool isClick)
+    {
+        if (isClick)
+            _edgeImg.color = new Color(_edgeImg.color.r, _edgeImg.color.g, _edgeImg.color.b, 1);
+        else
+            _edgeImg.color = new Color(_edgeImg.color.r, _edgeImg.color.g, _edgeImg.color.b, 0);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -163,6 +174,14 @@ public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
 
             ClientManager._instance.RotateInfo(_myIndex, _myTr.localEulerAngles.z);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (_cardType == eCardType.Selectable && UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._IsMyTurn)
+        {
+            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ClickCompleteCard(_myIndex);
         }
     }
 }

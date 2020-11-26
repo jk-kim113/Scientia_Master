@@ -29,7 +29,7 @@ public class BattleUI : MonoBehaviour
     [SerializeField]
     Text _turnCntText;
     [SerializeField]
-    GameObject _rotateOkButton;
+    Button _rotateOkButton;
 #pragma warning restore
 
     Text _reaCardTimeText;
@@ -55,6 +55,8 @@ public class BattleUI : MonoBehaviour
     }
 
     public int _RestTurnCnt { get { return _turnCount - _currentTurn; } }
+
+    int _selectComplete = -1;
 
     private void Start()
     {
@@ -225,7 +227,10 @@ public class BattleUI : MonoBehaviour
 
     public void RotateCardState(int index, int[] cardState, int turnCount)
     {
-        _rotateOkButton.SetActive(_userInfoArr[0]._MyIndex == index);
+        _rotateOkButton.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+        _rotateOkButton.onClick.RemoveAllListeners();
+        _rotateOkButton.onClick.AddListener(() => { FinishRotateCard(); });
+
         StateChange(BattleManager.eReadyState.DoingAction);
         _informText.gameObject.SetActive(false);
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
@@ -280,6 +285,59 @@ public class BattleUI : MonoBehaviour
     {
         _rotateCardArr[index].SetRotation(rotateValue);
         _turnCntText.text = "남은 회전 횟수 : " + restCnt.ToString();
+    }
+
+    public void ShowCompleteCard(int index, int[] completeCard)
+    {
+        _selectComplete = -1;
+        _rotateOkButton.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+        _rotateOkButton.onClick.RemoveAllListeners();
+        _rotateOkButton.onClick.AddListener(() => { ChooseCompleteCard(); });
+
+        _turnCntText.gameObject.SetActive(false);
+        _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
+        _informText.text = "완료카드 고르는중...";
+
+        if (_userInfoArr[0]._MyIndex == index)
+        {
+            for(int n = 0; n < _rotateCardArr.Length; n++)
+            {
+                if(completeCard[n] > 0)
+                {
+                    _rotateCardArr[n].gameObject.SetActive(true);
+                    _rotateCardArr[n].InitCard(
+                        ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(completeCard[n], "Name")),
+                        RotateCard.eCardType.Selectable,
+                        n);
+                }
+                else
+                    _rotateCardArr[n].gameObject.SetActive(false);
+
+            }
+        }
+    }
+
+    public void ClickCompleteCard(int index)
+    {
+        if (_selectComplete == index)
+            return;
+
+        _selectComplete = index;
+
+        for (int n = 0; n < _rotateCardArr.Length; n++)
+        {
+            _rotateCardArr[n].ShowClick(n == index);
+        }
+    }
+
+    public void ChooseCompleteCard()
+    {
+        if (_selectComplete < 0)
+        {
+            //TODO System Message no select
+        }
+        else
+            ClientManager._instance.ChooseCompleteCard(_selectComplete);
     }
 
     public void ExitButton()

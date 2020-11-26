@@ -1064,18 +1064,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 141779806420633857}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 9082734410410130475}
-        m_MethodName: FinishRotateCard
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &4611968191900781778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,7 +1557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1677467759550876409
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2366,7 +2355,7 @@ MonoBehaviour:
   _informText: {fileID: 6840215637094179369}
   _rotateCardObj: {fileID: 8119014469853286699}
   _turnCntText: {fileID: 2855045611769587554}
-  _rotateOkButton: {fileID: 4092209537294388321}
+  _rotateOkButton: {fileID: 6504432579966353001}
 --- !u!1 &9082734410755632731
 GameObject:
   m_ObjectHideFlags: 0
@@ -3569,12 +3558,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34940faacb438c44986011e3b5017ae5, type: 3}
---- !u!224 &306362376830112042 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5692269714385736593, guid: 34940faacb438c44986011e3b5017ae5,
-    type: 3}
-  m_PrefabInstance: {fileID: 5386142220727206587}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7795235814604665994 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2779097536542291505, guid: 34940faacb438c44986011e3b5017ae5,
@@ -3587,6 +3570,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28aa8c10ddc889441a13c4b33fa2536e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &306362376830112042 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5692269714385736593, guid: 34940faacb438c44986011e3b5017ae5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5386142220727206587}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6948576118601065316
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -140,6 +140,15 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public int[] _rotateCardInfoArr;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ChooseCompleteCard
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _roomNumber;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+    }
     #endregion
 
     #region ToClient
@@ -295,6 +304,15 @@ public class DefinedStructure
         public float _rotateValue;
         [MarshalAs(UnmanagedType.I4)]
         public int _restCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_SelectCompleteCard
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        public int[] _cardArr;
     }
     #endregion
 }

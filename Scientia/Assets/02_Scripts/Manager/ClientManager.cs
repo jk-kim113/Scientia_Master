@@ -284,6 +284,7 @@ public class ClientManager : TSingleton<ClientManager>
                         break;
                     #endregion
 
+                    #region Game Ready
                     case DefinedProtocol.eToClient.CannotPlay:
 
                         SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Error_GameStart);
@@ -324,6 +325,7 @@ public class ClientManager : TSingleton<ClientManager>
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowAddCard(pShowPickCard._index, pShowPickCard._slotIndex, pShowPickCard._cardIndex);
 
                         break;
+                    #endregion
 
                     case DefinedProtocol.eToClient.ChooseAction:
 
@@ -359,6 +361,15 @@ public class ClientManager : TSingleton<ClientManager>
                         pShowRotateInfo = (DefinedStructure.P_ShowRotateInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowRotateInfo.GetType(), pToClient._totalSize);
 
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowRotate(pShowRotateInfo._index, pShowRotateInfo._rotateValue, pShowRotateInfo._restCount);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.SelectCompleteCard:
+
+                        DefinedStructure.P_SelectCompleteCard pSelectCompleteCard = new DefinedStructure.P_SelectCompleteCard();
+                        pSelectCompleteCard = (DefinedStructure.P_SelectCompleteCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectCompleteCard.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowCompleteCard(pSelectCompleteCard._index, pSelectCompleteCard._cardArr);
 
                         break;
                 }
@@ -540,6 +551,15 @@ public class ClientManager : TSingleton<ClientManager>
             pFinishRotate._rotateCardInfoArr[n] = cardRotateCnt[n];
 
         ToPacket(DefinedProtocol.eFromClient.FinishRotate, pFinishRotate);
+    }
+
+    public void ChooseCompleteCard(int completeCard)
+    {
+        DefinedStructure.P_ChooseCompleteCard pChooseCompleteCard;
+        pChooseCompleteCard._roomNumber = BattleManager._instance._RoomNumber;
+        pChooseCompleteCard._index = completeCard;
+
+        ToPacket(DefinedProtocol.eFromClient.ChooseCompleteCard, pChooseCompleteCard);
     }
 
     void GetMyCharacterInfo()

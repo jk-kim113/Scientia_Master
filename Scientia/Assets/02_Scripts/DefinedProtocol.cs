@@ -25,6 +25,7 @@ public class DefinedProtocol
         PickCardInProgress,
         RotateInfo,
         FinishRotate,
+        ChooseCompleteCard,
 
         ConnectionTerminate,
 
@@ -56,6 +57,7 @@ public class DefinedProtocol
         GetCard,
         RotateCard,
         ShowRotateInfo,
+        SelectCompleteCard,
 
         max
     }
