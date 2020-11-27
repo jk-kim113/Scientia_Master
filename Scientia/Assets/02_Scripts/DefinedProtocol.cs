@@ -59,6 +59,8 @@ public class DefinedProtocol
         ShowRotateInfo,
         SelectCompleteCard,
 
+        ConfirmTerminate,
+
         max
     }
 }

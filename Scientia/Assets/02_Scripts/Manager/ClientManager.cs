@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
@@ -582,18 +583,37 @@ public class ClientManager : TSingleton<ClientManager>
         _fromClientQueue.Enqueue(ConvertPacket.StructureToByteArray(packetRecieve));
     }
 
-    //private void OnApplicationQuit()
-    //{
-    //    if(_server != null)
-    //    {
-    //        DefinedStructure.P_Request pConnectionTerminate;
+    private void OnApplicationQuit()
+    {
+        if (_server != null)
+        {
+            DefinedStructure.P_Request pConnectionTerminate;
 
-    //        ToPacket(DefinedProtocol.eFromClient.ConnectionTerminate, pConnectionTerminate);
+            ToPacket(DefinedProtocol.eFromClient.ConnectionTerminate, pConnectionTerminate);
 
-    //        //_server.Shutdown(SocketShutdown.Both);
-    //        _server.Disconnect(true);
-    //        _server.Close();
-    //        _server = null;
-    //    }
-    //}
+            DefinedStructure.PacketInfo packetRecieve;
+            packetRecieve._id = (int)DefinedProtocol.eFromClient.ConnectionTerminate;
+            packetRecieve._data = new byte[1024];
+            byte[] temp = ConvertPacket.StructureToByteArray(pConnectionTerminate);
+            for (int n = 0; n < temp.Length; n++)
+                packetRecieve._data[n] = temp[n];
+            packetRecieve._totalSize = temp.Length;
+
+            _server.Send(ConvertPacket.StructureToByteArray(packetRecieve));
+
+            try
+            {
+                _server.Shutdown(SocketShutdown.Both);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex);
+            }
+            finally
+            {
+                _server.Close(0);
+                _server = null;
+            }
+        }
+    }
 }

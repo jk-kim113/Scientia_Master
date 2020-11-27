@@ -197,6 +197,7 @@ public class BattleUI : MonoBehaviour
 
     public void ChooseAction(int index)
     {
+        _rotateCardObj.SetActive(false);
         _projectBoard.gameObject.SetActive(false);
 
         _stateObj[(int)BattleManager.eReadyState.SelectionAction].gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
@@ -216,7 +217,7 @@ public class BattleUI : MonoBehaviour
 
     public void GetCardState(int index)
     {
-        StateChange(BattleManager.eReadyState.DoingAction);
+        StateChange(BattleManager.eReadyState.PickCard);
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
 
         _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
