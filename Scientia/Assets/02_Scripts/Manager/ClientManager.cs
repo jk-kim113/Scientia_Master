@@ -373,6 +373,16 @@ public class ClientManager : TSingleton<ClientManager>
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowCompleteCard(pSelectCompleteCard._index, pSelectCompleteCard._cardArr);
 
                         break;
+
+                    case DefinedProtocol.eToClient.GameOver:
+
+                        DefinedStructure.P_GameOver pGameOver = new DefinedStructure.P_GameOver();
+                        pGameOver = (DefinedStructure.P_GameOver)ConvertPacket.ByteArrayToStructure(pToClient._data, pGameOver.GetType(), pToClient._totalSize);
+
+                        //TODO GameOver UI to BattleUI
+                        
+
+                        break;
                 }
             }
 

@@ -30,6 +30,8 @@ public class BattleUI : MonoBehaviour
     Text _turnCntText;
     [SerializeField]
     Button _rotateOkButton;
+    [SerializeField]
+    GameObject _selectFieldObj;
 #pragma warning restore
 
     Text _reaCardTimeText;
@@ -341,9 +343,21 @@ public class BattleUI : MonoBehaviour
             ClientManager._instance.ChooseCompleteCard(_selectComplete);
     }
 
+    public void SelectField(int count)
+    {
+        if(count <= 0)
+        {
+            _informText.text = "점수 계산하는 중...";
+            _informText.gameObject.SetActive(true);
+        }
+        else
+        {
+            _selectFieldObj.SetActive(true);
+        }
+    }
+
     public void ExitButton()
     {
         //TODO Send Packet To Server
-        SceneControlManager._instance.StartLoadLobbyScene();
     }
 }

@@ -58,6 +58,7 @@ public class DefinedProtocol
         RotateCard,
         ShowRotateInfo,
         SelectCompleteCard,
+        GameOver,
 
         ConfirmTerminate,
 
