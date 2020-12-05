@@ -18,6 +18,12 @@ public class BattleInfo : MonoBehaviour
     GameObject _connectObj;
     [SerializeField]
     GameObject _disConnectObj;
+    [SerializeField]
+    Text _skillCubeTxt;
+    [SerializeField]
+    Text _flaskCubeTxt;
+    [SerializeField]
+    SkillTrack[] _skillTrackArr;
 #pragma warning restore
 
     bool _isEmpty;
@@ -54,6 +60,9 @@ public class BattleInfo : MonoBehaviour
         _levelText.text = level.ToString();
         ConnectState(!_isEmpty);
         ReadyState(isReady);
+
+        _skillCubeTxt.text = "x 0";
+        _flaskCubeTxt.text = "x 0";
     }
 
     public void ReadyState(bool isReady)
@@ -62,6 +71,16 @@ public class BattleInfo : MonoBehaviour
             _stateImg.color = Color.red;
         else
             _stateImg.color = Color.white;
+    }
+
+    public void InitInfo()
+    {
+        for(int n = 0; n < _skillTrackArr.Length; n++)
+        {
+            _skillTrackArr[n].InitSkillCube();
+        }
+
+        _skillCubeTxt.text = "x 4";
     }
 
     public void ShowTurn(bool isTurn)
@@ -75,5 +94,16 @@ public class BattleInfo : MonoBehaviour
     public void ShowMaster(bool isMaster)
     {
         _masterIcon.SetActive(isMaster);
+    }
+
+    public void ShowSkillCube(int skillcube, int field, int[] skillPos)
+    {
+        _skillCubeTxt.text = "x " + skillcube.ToString();
+        _skillTrackArr[field].ShowSkillPos(skillPos);
+    }
+
+    public void ShowFlaskCube(int flaskCube)
+    {
+        _flaskCubeTxt.text = "x " + flaskCube.ToString();
     }
 }

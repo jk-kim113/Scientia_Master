@@ -35,4 +35,13 @@ public class ProjectBoard : MonoBehaviour
             _cardList[n].gameObject.SetActive(true);
         }
     }
+
+    public void RenewCard(int cardIndex, int cardCount)
+    {
+        for(int n = 0; n < _cardList.Count; n++)
+        {
+            if (_cardList[n]._MyIndex == cardIndex)
+                _cardList[n]._CardCount = cardCount;
+        }
+    }
 }

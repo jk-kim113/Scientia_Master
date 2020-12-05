@@ -48,6 +48,7 @@ public class LobbyManager : MonoBehaviour
         _currentLoadType = eLoadType.MyInfoWait;
     }
 
+    //TODO Load Shop Info
     public void LoadFinish()
     {
         switch(_currentLoadType)

@@ -27,11 +27,13 @@ public class BattleCardUI : CardInfoUI, IPointerClickHandler
     void AddToCardSlot()
     {
         ClientManager._instance.PickCard(_cardIndex);
+        UIManager._instance.Close(UIManager.eKindWindow.BattleCardUI);
     }
 
     void AddCardInProgress()
     {
         ClientManager._instance.PickCardInProgress(_cardIndex);
+        UIManager._instance.Close(UIManager.eKindWindow.BattleCardUI);
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -29,33 +29,9 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    public void Open()
+    public void Open(int unLockSlot)
     {
-        int emptySlot = 0;
-
-        if(IsEmptySlot(out emptySlot))
-        {
-            //TODO Open
-        }
-        else
-        {
-            //TODO System Message no empty slot
-        }
-    }
-
-    bool IsEmptySlot(out int emptySlot)
-    {
-        emptySlot = -1;
-        for (int n = 0; n < _isOpenCardslot.Length; n++)
-        {
-            if (_isOpenCardslot[n])
-            {
-                emptySlot = n;
-                return true;
-            }   
-        }
-
-        return false;
+        _cardImgArr[unLockSlot - 1].sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "EmptyCardSlot");
     }
 
     public void ShowTurn(bool isTurn)
@@ -70,5 +46,10 @@ public class CardSlot : MonoBehaviour
     {
         _cardImgArr[slotIndex].sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image,
             TableManager._instance.Get(eTableType.CardData).ToS(cardIndex, "Name"));
+    }
+
+    public void DeleteCard(int slotIndex)
+    {
+        _cardImgArr[slotIndex].sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "EmptyCardSlot");
     }
 }

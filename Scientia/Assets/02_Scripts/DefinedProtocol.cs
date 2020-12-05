@@ -26,6 +26,7 @@ public class DefinedProtocol
         RotateInfo,
         FinishRotate,
         ChooseCompleteCard,
+        SelectFieldResult,
 
         ConnectionTerminate,
 
@@ -52,12 +53,21 @@ public class DefinedProtocol
         GameStart,
         ShowPickedCard,
         PickCard,
+        ShowProjectBoard,
         ShowPickCard,
+        DeletePickCard,
         ChooseAction,
         GetCard,
         RotateCard,
         ShowRotateInfo,
         SelectCompleteCard,
+        ShowTotalFlask,
+        ShowUserFlask,
+        ShowTotalSkill,
+        ShowUserSkill,
+        ShowUserSlot,
+        SelectField,
+
         GameOver,
 
         ConfirmTerminate,

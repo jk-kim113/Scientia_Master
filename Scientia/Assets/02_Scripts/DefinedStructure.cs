@@ -253,6 +253,15 @@ public class DefinedStructure
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct P_GameStart
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _skillcubeCnt;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _flaskcubeCnt;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct P_PickedCard
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12)]
@@ -267,12 +276,30 @@ public class DefinedStructure
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowProjectBoard
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _cardIndex;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _cardCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct P_ShowPickCard
     {
         [MarshalAs(UnmanagedType.I4)]
         public int _index;
         [MarshalAs(UnmanagedType.I4)]
         public int _cardIndex;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _slotIndex;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_DeletePickCard
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
         [MarshalAs(UnmanagedType.I4)]
         public int _slotIndex;
     }
@@ -291,6 +318,8 @@ public class DefinedStructure
         public int _index;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public int[] _cardArr;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        public int[] _cardRotateInfo;
         [MarshalAs(UnmanagedType.I4)]
         public int _turnCount;
     }
@@ -313,6 +342,67 @@ public class DefinedStructure
         public int _index;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public int[] _cardArr;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowTotalFlask
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _totalFlask;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowUserFlask
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _userFlask;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowTotalSkill
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _totalSkill;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowUserSkill
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _field;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _userSkill;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+        public int[] _userSkillPos;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowUserSlot
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _unLockSlot;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_SelectField
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _userIndex;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_SelectFieldResult
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _roomNumber;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _field;
     }
 
     [StructLayout(LayoutKind.Sequential)]

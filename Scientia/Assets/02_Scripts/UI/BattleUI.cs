@@ -32,6 +32,12 @@ public class BattleUI : MonoBehaviour
     Button _rotateOkButton;
     [SerializeField]
     GameObject _selectFieldObj;
+    [SerializeField]
+    Text _totalSkillcubeCntTxt;
+    [SerializeField]
+    Text _totalFlaskcubeTxt;
+    [SerializeField]
+    GameObject _cubeSlot;
 #pragma warning restore
 
     Text _reaCardTimeText;
@@ -55,7 +61,7 @@ public class BattleUI : MonoBehaviour
             _turnCntText.text = "남은 회전 횟수 : " + _RestTurnCnt.ToString();
         }
     }
-
+    
     public int _RestTurnCnt { get { return _turnCount - _currentTurn; } }
 
     int _selectComplete = -1;
@@ -92,9 +98,22 @@ public class BattleUI : MonoBehaviour
 
             case BattleManager.eReadyState.GameStart:
 
+                _cubeSlot.SetActive(true);
                 AllReadyCancel();
+                InitBattleInfo();
+                ShowTotalSkillCubeCount(4);
+                ShowTotalFlaskCubeCount(0);
 
                 break;
+        }
+    }
+
+    void InitBattleInfo()
+    {
+        for(int n = 0; n < _userInfoArr.Length; n++)
+        {
+            if (!_userInfoArr[n]._IsEmpty)
+                _userInfoArr[n].InitInfo();
         }
     }
 
@@ -129,6 +148,7 @@ public class BattleUI : MonoBehaviour
 
         _actionBtn.GetComponentInChildren<Text>().text = _userInfoArr[0]._MyIndex == masterIndex ? "시작하기" : "준비하기";
 
+        _actionBtn.onClick.RemoveAllListeners();
         if (_userInfoArr[0]._MyIndex == masterIndex)
             _actionBtn.onClick.AddListener(() => { InformGameStart(); });
         else
@@ -166,9 +186,36 @@ public class BattleUI : MonoBehaviour
         }
     }
 
+    public void ShowUserSkillCubeCount(int index, int skillcube, int field, int[] skillPos)
+    {
+        if (_userInfoArr[index] != null)
+            _userInfoArr[index].ShowSkillCube(skillcube, field, skillPos);
+    }
+
+    public void ShowUserFlaskCubeCount(int index, int flaskcube)
+    {
+        if (_userInfoArr[index] != null)
+            _userInfoArr[index].ShowFlaskCube(flaskcube);
+    }
+
+    public void ShowTotalSkillCubeCount(int skillcube)
+    {
+        _totalSkillcubeCntTxt.text = "x " + skillcube.ToString();
+    }
+
+    public void ShowTotalFlaskCubeCount(int flaskcube)
+    {
+        _totalFlaskcubeTxt.text = "x " + flaskcube.ToString();
+    }
+
     public void ShowPickedCard(int[] pickedCardArr)
     {   
         _projectBoard.ShowPickedCard(pickedCardArr);
+    }
+
+    public void RenewProjectBoard(int cardIndex, int cardCount)
+    {
+        _projectBoard.RenewCard(cardIndex, cardCount);
     }
 
     public void ShowReadCardTime(int time)
@@ -197,6 +244,16 @@ public class BattleUI : MonoBehaviour
         _cardSlotArr[index].ShowAddCard(slotIndex, cardIndex);
     }
 
+    public void DeleteCard(int index, int slotIndex)
+    {
+        _cardSlotArr[index].DeleteCard(slotIndex);
+    }
+
+    public void OpenCardSlot(int index, int unLockSlot)
+    {
+        _cardSlotArr[index].Open(unLockSlot);
+    }
+
     public void ChooseAction(int index)
     {
         _rotateCardObj.SetActive(false);
@@ -205,6 +262,8 @@ public class BattleUI : MonoBehaviour
         _stateObj[(int)BattleManager.eReadyState.SelectionAction].gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
         _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
         _informText.text = "행동 선택중...";
+
+        PickCardTurn(index);
     }
 
     public void GetCardAction()
@@ -228,7 +287,7 @@ public class BattleUI : MonoBehaviour
         _informText.text = "카드 고르는중...";
     }
 
-    public void RotateCardState(int index, int[] cardState, int turnCount)
+    public void RotateCardState(int index, int[] cardState, int[] cardRotateInfo, int turnCount)
     {
         _rotateOkButton.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
         _rotateOkButton.onClick.RemoveAllListeners();
@@ -239,6 +298,7 @@ public class BattleUI : MonoBehaviour
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
         _turnCount = turnCount;
         _NowTurn = 0;
+        _currentTurn = 0;
 
         _rotateCardObj.SetActive(true);
 
@@ -248,20 +308,21 @@ public class BattleUI : MonoBehaviour
             {
                 case 0:
 
-                    _rotateCardArr[n].InitCard(ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "EmptyCardSlot"), RotateCard.eCardType.Empty, n);
+                    _rotateCardArr[n].InitCard(ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "EmptyCardSlot"),
+                        RotateCard.eCardType.Empty, n, cardRotateInfo[n]);
 
                     break;
                 case -1:
 
-                    _rotateCardArr[n].InitCard(ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "CloseCardSlot"), RotateCard.eCardType.Lock, n);
+                    _rotateCardArr[n].InitCard(ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, "CloseCardSlot"),
+                        RotateCard.eCardType.Lock, n, cardRotateInfo[n]);
 
                     break;
                 default:
 
                     _rotateCardArr[n].InitCard(
                         ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(cardState[n], "Name")), 
-                        RotateCard.eCardType.Rotatable,
-                        n);
+                        RotateCard.eCardType.Rotatable, n, cardRotateInfo[n]);
 
                     break;
             }
@@ -286,7 +347,9 @@ public class BattleUI : MonoBehaviour
 
     public void ShowRotate(int index, float rotateValue, int restCnt)
     {
-        _rotateCardArr[index].SetRotation(rotateValue);
+        if(!_IsMyTurn)
+            _rotateCardArr[index].SetRotation(rotateValue);
+
         _turnCntText.text = "남은 회전 횟수 : " + restCnt.ToString();
     }
 
@@ -311,7 +374,7 @@ public class BattleUI : MonoBehaviour
                     _rotateCardArr[n].InitCard(
                         ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(completeCard[n], "Name")),
                         RotateCard.eCardType.Selectable,
-                        n);
+                        n, 0);
                 }
                 else
                     _rotateCardArr[n].gameObject.SetActive(false);
@@ -343,17 +406,22 @@ public class BattleUI : MonoBehaviour
             ClientManager._instance.ChooseCompleteCard(_selectComplete);
     }
 
-    public void SelectField(int count)
+    public void SelectField(int userIndex)
     {
-        if(count <= 0)
+        if(_userInfoArr[0]._MyIndex != userIndex)
         {
-            _informText.text = "점수 계산하는 중...";
+            _informText.text = "분야 선택하는 중...";
             _informText.gameObject.SetActive(true);
         }
         else
         {
             _selectFieldObj.SetActive(true);
         }
+    }
+
+    public void SelectFieldButton(int field)
+    {
+        ClientManager._instance.SelectField(field);
     }
 
     public void ExitButton()

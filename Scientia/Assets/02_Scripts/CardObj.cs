@@ -13,6 +13,7 @@ public class CardObj : MonoBehaviour
 
     protected bool _isUnlock;
     protected int _myIndex;
+    public int _MyIndex { get { return _myIndex; } }
 
     public virtual void InitCard(Sprite img, int index)
     {

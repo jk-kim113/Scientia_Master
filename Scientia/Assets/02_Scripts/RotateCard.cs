@@ -35,10 +35,9 @@ public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     int _myIndex;
 
-    private void Start()
+    private void Awake()
     {
         _myTr = GetComponent<RectTransform>();
-        _initZ = _myTr.localEulerAngles.z;
     }
 
     private void Update()
@@ -50,19 +49,25 @@ public class RotateCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             if(_currentZ - interval > _initZ)
                 _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, _currentZ - interval);
 
-            if(_myTr.localEulerAngles.z > 359 && _myTr.localEulerAngles.z < 360)
-                _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, 359);
+            //if(_myTr.localEulerAngles.z > 359 && _myTr.localEulerAngles.z < 360)
+            //    _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, 359);
 
             ClientManager._instance.RotateInfo(_myIndex, _myTr.localEulerAngles.z);
         }
     }
 
-    public void InitCard(Sprite cardImg, eCardType type, int index)
+    public void InitCard(Sprite cardImg, eCardType type, int index, int rotateInfo)
     {
         _cardType = type;
 
         _cardImg.sprite = cardImg;
         _myIndex = index;
+
+        _myTr.localEulerAngles = new Vector3(_myTr.localEulerAngles.x, _myTr.localEulerAngles.y, 90 * rotateInfo);
+
+        _initZ = _myTr.localEulerAngles.z;
+
+        _myRotateCount = 0;
     }
 
     public void SetRotation(float rotateValue)

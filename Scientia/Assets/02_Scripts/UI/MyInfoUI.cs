@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MyInfoUI : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class MyInfoUI : MonoBehaviour
     CardInvenTab[] _tabArr;
     [SerializeField]
     Transform _cardInvenTr;
+    [SerializeField]
+    Image _characterImg;
+    [SerializeField]
+    Text _characNameTxt;
 #pragma warning restore
 
     List<MyInfoCardObj> _cardList = new List<MyInfoCardObj>();
@@ -54,6 +59,13 @@ public class MyInfoUI : MonoBehaviour
         }
 
         _isReady = true;
+    }
+
+    public void InitMyInfo(int characIndex)
+    {
+        _characterImg.sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image,
+            TableManager._instance.Get(eTableType.CharacterData).ToS(characIndex, CharacterData.Index.EnglishName.ToString()));
+        _characNameTxt.text = TableManager._instance.Get(eTableType.CharacterData).ToS(characIndex, CharacterData.Index.KoreanName.ToString());
     }
 
     public void SelectTab(int index)

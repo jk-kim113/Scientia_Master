@@ -12,6 +12,15 @@ public class GameCardObj : CardObj, IPointerClickHandler
 #pragma warning restore
 
     int _cardCount;
+    public int _CardCount
+    {
+        get { return _cardCount; }
+        set
+        {
+            _cardCount = value;
+            _cardCntText.text = _cardCount.ToString();
+        }
+    }
 
     public void InitCard(Sprite img, int index, int cardCnt)
     {
