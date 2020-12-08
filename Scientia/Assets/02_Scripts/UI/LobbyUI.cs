@@ -25,4 +25,9 @@ public class LobbyUI : MonoBehaviour
     {
         UIManager._instance.OpenWnd<CreateRoomUI>(UIManager.eKindWindow.CreateRoomUI);
     }
+
+    public void ShopButton()
+    {
+        UIManager._instance.OpenWnd<ShopUI>(UIManager.eKindWindow.ShopUI);
+    }
 }

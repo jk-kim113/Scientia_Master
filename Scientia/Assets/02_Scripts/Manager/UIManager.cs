@@ -18,6 +18,7 @@ public class UIManager : TSingleton<UIManager>
         CreateRoomUI,
         BattleUI,
         BattleCardUI,
+        ShopUI,
 
         max
     }

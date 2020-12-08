@@ -11,7 +11,7 @@ public enum eTableType
     CharacterExplainData,
     CardData,
     CardTabData,
-    KoreanData,
+    ItemData,
 
     max
 }
@@ -52,6 +52,7 @@ public class TableManager : TSingleton<TableManager>
         Load<CharacterExplainData>(eTableType.CharacterExplainData);
         Load<CardData>(eTableType.CardData);
         Load<CardTabData>(eTableType.CardTabData);
+        Load<ItemData>(eTableType.ItemData);
     }
 
     public TableBase Get(eTableType type)

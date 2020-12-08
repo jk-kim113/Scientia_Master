@@ -95,7 +95,7 @@ public class ClientManager : TSingleton<ClientManager>
             if (_toClientQueue.Count != 0)
             {
                 DefinedStructure.PacketInfo pToClient = _toClientQueue.Dequeue();
-
+                
                 switch ((DefinedProtocol.eToClient)pToClient._id)
                 {
                     #region LogIn / Character
@@ -469,7 +469,35 @@ public class ClientManager : TSingleton<ClientManager>
                         //TODO GameOver UI to BattleUI
                         
                         break;
-                        #endregion
+                    #endregion
+
+                    case DefinedProtocol.eToClient.ShowUserShopInfo:
+
+                        DefinedStructure.P_ShowShopInfo pShowShopInfo = new DefinedStructure.P_ShowShopInfo();
+                        pShowShopInfo = (DefinedStructure.P_ShowShopInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowShopInfo.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<ShopUI>(UIManager.eKindWindow.ShopUI).AddMyItmeToInven(pShowShopInfo._itemIndex, pShowShopInfo._itemCount);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.EndUserShopInfo:
+
+                        DefinedStructure.P_EndUserShopInfo pEndUserShopInfo = new DefinedStructure.P_EndUserShopInfo();
+                        pEndUserShopInfo = (DefinedStructure.P_EndUserShopInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pEndUserShopInfo.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<ShopUI>(UIManager.eKindWindow.ShopUI).InitCoin(pEndUserShopInfo._coinArr);
+                        LobbyManager._instance.LoadFinish();
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowCoinInfo:
+
+                        DefinedStructure.P_ShowCoinInfo pShowCoinInfo = new DefinedStructure.P_ShowCoinInfo();
+                        pShowCoinInfo = (DefinedStructure.P_ShowCoinInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowCoinInfo.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<ShopUI>(UIManager.eKindWindow.ShopUI).InitCoin(pShowCoinInfo._coinIndex, pShowCoinInfo._coinValue);
+
+                        break;
                 }
             }
 
@@ -667,6 +695,23 @@ public class ClientManager : TSingleton<ClientManager>
         pSelectFieldResult._field = field;
 
         ToPacket(DefinedProtocol.eFromClient.SelectFieldResult, pSelectFieldResult);
+    }
+
+    public void GetShopInfo()
+    {
+        DefinedStructure.P_RequestShopInfo pRequestShopInfo;
+        pRequestShopInfo._nickName = _currentNickName;
+
+        ToPacket(DefinedProtocol.eFromClient.RequestShopInfo, pRequestShopInfo);
+    }
+
+    public void BuyItem(int itemIndex)
+    {
+        DefinedStructure.P_BuyItem pBuyItem;
+        pBuyItem._nickName = _currentNickName;
+        pBuyItem._itemIndex = itemIndex;
+
+        ToPacket(DefinedProtocol.eFromClient.BuyItem, pBuyItem);
     }
 
     void GetMyCharacterInfo()

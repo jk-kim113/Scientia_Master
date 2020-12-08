@@ -149,6 +149,22 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.I4)]
         public int _index;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_RequestShopInfo
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_BuyItem
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _itemIndex;
+    }
     #endregion
 
     #region ToClient
@@ -410,6 +426,31 @@ public class DefinedStructure
     {
         [MarshalAs(UnmanagedType.I4)]
         public int _specificScore;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowShopInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _itemIndex;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _itemCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_EndUserShopInfo
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
+        public int[] _coinArr;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_ShowCoinInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int _coinIndex;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _coinValue;
     }
     #endregion
 }

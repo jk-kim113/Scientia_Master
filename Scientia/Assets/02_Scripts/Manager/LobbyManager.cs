@@ -43,12 +43,12 @@ public class LobbyManager : MonoBehaviour
 
         UIManager._instance.OpenWnd<LobbyUI>(UIManager.eKindWindow.LobbyUI);
         UIManager._instance.OpenWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
+        UIManager._instance.OpenWnd<ShopUI>(UIManager.eKindWindow.ShopUI);
         
         ClientManager._instance.RequestMyInfoData();
         _currentLoadType = eLoadType.MyInfoWait;
     }
 
-    //TODO Load Shop Info
     public void LoadFinish()
     {
         switch(_currentLoadType)
@@ -65,6 +65,17 @@ public class LobbyManager : MonoBehaviour
 
             case eLoadType.LobbyInfoWait:
 
+                _currentLoadType = eLoadType.LobbyInfoEnd;
+                _currentLoadType = eLoadType.ShopInfoStart;
+                ClientManager._instance.GetShopInfo();
+                _currentLoadType = eLoadType.ShopInfoWait;
+
+                break;
+
+            case eLoadType.ShopInfoWait:
+
+                _currentLoadType = eLoadType.ShopInfoEnd;
+                UIManager._instance.Close(UIManager.eKindWindow.ShopUI);
                 _currentLoadType = eLoadType.LoadEnd;
 
                 break;

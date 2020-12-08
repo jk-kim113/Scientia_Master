@@ -27,6 +27,8 @@ public class DefinedProtocol
         FinishRotate,
         ChooseCompleteCard,
         SelectFieldResult,
+        RequestShopInfo,
+        BuyItem,
 
         ConnectionTerminate,
 
@@ -67,6 +69,9 @@ public class DefinedProtocol
         ShowUserSkill,
         ShowUserSlot,
         SelectField,
+        ShowUserShopInfo,
+        EndUserShopInfo,
+        ShowCoinInfo,
 
         GameOver,
 
