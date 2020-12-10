@@ -471,6 +471,7 @@ public class ClientManager : TSingleton<ClientManager>
                         break;
                     #endregion
 
+                    #region Shop
                     case DefinedProtocol.eToClient.ShowUserShopInfo:
 
                         DefinedStructure.P_ShowShopInfo pShowShopInfo = new DefinedStructure.P_ShowShopInfo();
@@ -496,6 +497,18 @@ public class ClientManager : TSingleton<ClientManager>
                         pShowCoinInfo = (DefinedStructure.P_ShowCoinInfo)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowCoinInfo.GetType(), pToClient._totalSize);
 
                         UIManager._instance.GetWnd<ShopUI>(UIManager.eKindWindow.ShopUI).InitCoin(pShowCoinInfo._coinIndex, pShowCoinInfo._coinValue);
+
+                        break;
+                    #endregion
+
+                    case DefinedProtocol.eToClient.ShowFriendList:
+
+                        DefinedStructure.P_ShowFriendList pShowFriendList = new DefinedStructure.P_ShowFriendList();
+                        pShowFriendList = (DefinedStructure.P_ShowFriendList)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowFriendList.GetType(), pToClient._totalSize);
+
+                        UIManager._instance.GetWnd<CommunityUI>(UIManager.eKindWindow.CommunityUI).InitMyFriend(pShowFriendList._friendNickName, pShowFriendList._friendLevel);
+
+                        LobbyManager._instance.LoadFinish();
 
                         break;
                 }
@@ -712,6 +725,14 @@ public class ClientManager : TSingleton<ClientManager>
         pBuyItem._itemIndex = itemIndex;
 
         ToPacket(DefinedProtocol.eFromClient.BuyItem, pBuyItem);
+    }
+
+    public void RequestFriendList()
+    {
+        DefinedStructure.P_RequestFriendList pRequestFriendList;
+        pRequestFriendList._nickName = _currentNickName;
+
+        ToPacket(DefinedProtocol.eFromClient.RequestFriendList, pRequestFriendList);
     }
 
     void GetMyCharacterInfo()

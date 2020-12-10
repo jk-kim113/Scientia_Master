@@ -29,6 +29,7 @@ public class DefinedProtocol
         SelectFieldResult,
         RequestShopInfo,
         BuyItem,
+        RequestFriendList,
 
         ConnectionTerminate,
 
@@ -72,6 +73,7 @@ public class DefinedProtocol
         ShowUserShopInfo,
         EndUserShopInfo,
         ShowCoinInfo,
+        ShowFriendList,
 
         GameOver,
 

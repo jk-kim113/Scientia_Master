@@ -52,4 +52,9 @@ public class ShopUI : MonoBehaviour
         myItem.InitItem(itemIndex, itemCount);
         _myItemList.Add(myItem);
     }
+
+    public void ExitButton()
+    {
+        UIManager._instance.Close(UIManager.eKindWindow.ShopUI);
+    }
 }

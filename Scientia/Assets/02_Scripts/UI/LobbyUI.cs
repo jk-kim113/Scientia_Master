@@ -30,4 +30,9 @@ public class LobbyUI : MonoBehaviour
     {
         UIManager._instance.OpenWnd<ShopUI>(UIManager.eKindWindow.ShopUI);
     }
+
+    public void CommunityButton()
+    {
+        UIManager._instance.OpenWnd<CommunityUI>(UIManager.eKindWindow.CommunityUI);
+    }
 }

@@ -23,6 +23,10 @@ public class LobbyManager : MonoBehaviour
         ShopInfoWait,
         ShopInfoEnd,
 
+        FriendInfoStart,
+        FriendInfoWait,
+        FriendInfoEnd,
+
         LoadEnd
     }
 
@@ -44,7 +48,8 @@ public class LobbyManager : MonoBehaviour
         UIManager._instance.OpenWnd<LobbyUI>(UIManager.eKindWindow.LobbyUI);
         UIManager._instance.OpenWnd<MyInfoUI>(UIManager.eKindWindow.MyInfoUI);
         UIManager._instance.OpenWnd<ShopUI>(UIManager.eKindWindow.ShopUI);
-        
+        UIManager._instance.OpenWnd<CommunityUI>(UIManager.eKindWindow.CommunityUI);
+
         ClientManager._instance.RequestMyInfoData();
         _currentLoadType = eLoadType.MyInfoWait;
     }
@@ -76,6 +81,16 @@ public class LobbyManager : MonoBehaviour
 
                 _currentLoadType = eLoadType.ShopInfoEnd;
                 UIManager._instance.Close(UIManager.eKindWindow.ShopUI);
+                _currentLoadType = eLoadType.FriendInfoStart;
+                ClientManager._instance.RequestFriendList();
+                _currentLoadType = eLoadType.FriendInfoWait;
+
+                break;
+
+            case eLoadType.FriendInfoWait:
+
+                _currentLoadType = eLoadType.FriendInfoEnd;
+                UIManager._instance.Close(UIManager.eKindWindow.CommunityUI);
                 _currentLoadType = eLoadType.LoadEnd;
 
                 break;

@@ -1301,7 +1301,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 458459111401401408}
-        m_MethodName: MyInfoButton
+        m_MethodName: CommunityButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
