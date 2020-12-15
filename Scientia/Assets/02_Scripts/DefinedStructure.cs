@@ -172,6 +172,15 @@ public class DefinedStructure
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _nickName;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_QuickEnter
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _quickMode;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _nickName;
+    }
     #endregion
 
     #region ToClient
@@ -477,6 +486,13 @@ public class DefinedStructure
         public int[] _withLevel;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string _withDate;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct P_SystemMessage
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        public string _systemMsgType;
     }
     #endregion
 }

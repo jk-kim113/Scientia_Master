@@ -23,6 +23,7 @@ public class RoomInfo : MonoBehaviour
 #pragma warning restore
 
     int _myRoomNumber;
+    public int _MyRoomNumber { get { return _myRoomNumber; } }
 
     public void InitRoomInfo(int roomNumber, string name, bool isLock, int currentMemberCnt, int maxMemberCnt, string mode, string rule, string isPlay)
     {
@@ -30,9 +31,16 @@ public class RoomInfo : MonoBehaviour
         _roomNumberText.text = roomNumber.ToString();
         _nameText.text = name;
         _lockState.SetActive(isLock);
-        _memberCntText.text = string.Format("{0} / {1}", currentMemberCnt, maxMemberCnt);
         _modeText.text = mode;
         _ruleText.text = rule;
+
+        RenewRoomInfo(currentMemberCnt, maxMemberCnt, isPlay);
+    }
+
+    public void RenewRoomInfo(int currentMemberCnt, int maxMemberCnt, string isPlay)
+    {
+        _memberCntText.text = string.Format("{0} / {1}", currentMemberCnt, maxMemberCnt);
+
         _isPlayText.text = isPlay;
     }
 

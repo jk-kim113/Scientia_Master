@@ -119,7 +119,7 @@ public class BattleUI : MonoBehaviour
 
     public void ShowUserInfo(int index, string nickName, int level, bool isReady)
     {
-        if(ClientManager._instance._NowNickName.CompareTo(nickName) == 0)
+        if(ClientManager._instance._NowNickName == nickName)
         {
             _userInfoArr[0].ShowInfo(index, nickName, level, isReady);
         }

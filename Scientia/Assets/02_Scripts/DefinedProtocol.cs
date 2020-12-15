@@ -30,6 +30,7 @@ public class DefinedProtocol
         RequestShopInfo,
         BuyItem,
         RequestFriendList,
+        QuickEnter,
 
         ConnectionTerminate,
 
@@ -77,6 +78,7 @@ public class DefinedProtocol
 
         GameOver,
 
+        SystemMessage,
         ConfirmTerminate,
 
         max

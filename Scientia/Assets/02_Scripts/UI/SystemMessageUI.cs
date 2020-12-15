@@ -25,7 +25,12 @@ public class SystemMessageUI : MonoBehaviour
         Room_Name_NonEnter,
         Room_Pw_NonEnter,
         UnLockCard,
-        Error_GameStart
+        Error_GameStart,
+        No_Room,
+        No_CardSlot,
+        No_RotatableCard,
+        Not_Correct_Select,
+        Fail_Buy_Item
     }
 
 #pragma warning disable 0649

@@ -511,6 +511,15 @@ public class ClientManager : TSingleton<ClientManager>
                         LobbyManager._instance.LoadFinish();
 
                         break;
+
+                    case DefinedProtocol.eToClient.SystemMessage:
+
+                        DefinedStructure.P_SystemMessage pSystemMessage = new DefinedStructure.P_SystemMessage();
+                        pSystemMessage = (DefinedStructure.P_SystemMessage)ConvertPacket.ByteArrayToStructure(pToClient._data, pSystemMessage.GetType(), pToClient._totalSize);
+
+                        SystemMessageUI.Open((SystemMessageUI.eSystemMessageType)Enum.Parse(typeof(SystemMessageUI.eSystemMessageType), pSystemMessage._systemMsgType));
+                        
+                        break;
                 }
             }
 
@@ -617,6 +626,15 @@ public class ClientManager : TSingleton<ClientManager>
         pTryEnterRoom._roomNumber = roomNum;
 
         ToPacket(DefinedProtocol.eFromClient.TryEnterRoom, pTryEnterRoom);
+    }
+
+    public void QuickEnter(string mode)
+    {
+        DefinedStructure.P_QuickEnter pQuickEnter;
+        pQuickEnter._quickMode = mode;
+        pQuickEnter._nickName = _currentNickName;
+
+        ToPacket(DefinedProtocol.eFromClient.QuickEnter, pQuickEnter);
     }
 
     public void InformReady()
