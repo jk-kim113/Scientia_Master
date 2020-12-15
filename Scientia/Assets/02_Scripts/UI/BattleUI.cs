@@ -276,6 +276,16 @@ public class BattleUI : MonoBehaviour
         ClientManager._instance.SelectAction((int)eActionKind.RotateCard);
     }
 
+    public void SelectCard(int index)
+    {
+        _IsMyTurn = _userInfoArr[0]._MyIndex == index;
+
+        _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+
+        _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
+        _informText.text = "카드 고르는중...";
+    }
+
     public void GetCardState(int index)
     {
         StateChange(BattleManager.eReadyState.PickCard);

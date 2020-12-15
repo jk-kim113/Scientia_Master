@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
         ReadCard,
         PickCard,
         SelectionAction,
-
+        SelectCard,
 
         GameStart,
         WaitServer,

@@ -31,6 +31,7 @@ public class DefinedProtocol
         BuyItem,
         RequestFriendList,
         QuickEnter,
+        SelectCardResult,
 
         ConnectionTerminate,
 
@@ -75,6 +76,8 @@ public class DefinedProtocol
         EndUserShopInfo,
         ShowCoinInfo,
         ShowFriendList,
+        SelectCard,
+        SelectMyCard,
 
         GameOver,
 

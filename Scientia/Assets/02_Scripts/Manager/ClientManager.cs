@@ -469,6 +469,25 @@ public class ClientManager : TSingleton<ClientManager>
                         //TODO GameOver UI to BattleUI
                         
                         break;
+
+                    case DefinedProtocol.eToClient.SelectCard:
+
+                        DefinedStructure.P_GetCard pSelectCard = new DefinedStructure.P_GetCard();
+                        pSelectCard = (DefinedStructure.P_GetCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectCard.GetType(), pToClient._totalSize);
+
+                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.SelectCard);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).SelectCard(pSelectCard._index);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.SelectMyCard:
+
+                        DefinedStructure.P_SelectMyCard pSelectMyCard = new DefinedStructure.P_SelectMyCard();
+                        pSelectMyCard = (DefinedStructure.P_SelectMyCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectMyCard.GetType(), pToClient._totalSize);
+
+                        //TODO Show UI
+
+                        break;
                     #endregion
 
                     #region Shop
@@ -751,6 +770,15 @@ public class ClientManager : TSingleton<ClientManager>
         pRequestFriendList._nickName = _currentNickName;
 
         ToPacket(DefinedProtocol.eFromClient.RequestFriendList, pRequestFriendList);
+    }
+
+    public void SelectCardResult(int cardIndex)
+    {
+        DefinedStructure.P_PickCard pPickCard;
+        pPickCard._roomNumber = BattleManager._instance._RoomNumber;
+        pPickCard._cardIndex = cardIndex;
+
+        ToPacket(DefinedProtocol.eFromClient.SelectCardResult, pPickCard);
     }
 
     void GetMyCharacterInfo()
