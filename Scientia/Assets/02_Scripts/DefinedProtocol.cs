@@ -32,6 +32,7 @@ public class DefinedProtocol
         RequestFriendList,
         QuickEnter,
         SelectCardResult,
+        FinishGameOver,
 
         ConnectionTerminate,
 
@@ -78,8 +79,10 @@ public class DefinedProtocol
         ShowFriendList,
         SelectCard,
         SelectMyCard,
+        SelectOtherCard,
 
         GameOver,
+        ShowGameResult,
 
         SystemMessage,
         ConfirmTerminate,

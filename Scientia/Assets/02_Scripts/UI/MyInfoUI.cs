@@ -23,6 +23,8 @@ public class MyInfoUI : MonoBehaviour
     Image _characterImg;
     [SerializeField]
     Text _characNameTxt;
+    [SerializeField]
+    LevelObj[] _levelObjArr;
 #pragma warning restore
 
     List<MyInfoCardObj> _cardList = new List<MyInfoCardObj>();
@@ -33,6 +35,12 @@ public class MyInfoUI : MonoBehaviour
 
     bool _isReady;
     public bool _IsReady { get { return _isReady; } }
+
+    int[] _levelArr = new int[5];
+    int[] _expArr = new int[5];
+
+    public int[] _LevelArr { get { return _levelArr; } }
+    public int[] _ExpArr { get { return _expArr; } }
 
     private void Start()
     {
@@ -61,11 +69,25 @@ public class MyInfoUI : MonoBehaviour
         _isReady = true;
     }
 
-    public void InitMyInfo(int characIndex)
+    public void InitMyInfo(int characIndex, int[] levelArr, int[] expArr)
     {
         _characterImg.sprite = ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image,
             TableManager._instance.Get(eTableType.CharacterData).ToS(characIndex, CharacterData.Index.EnglishName.ToString()));
         _characNameTxt.text = TableManager._instance.Get(eTableType.CharacterData).ToS(characIndex, CharacterData.Index.KoreanName.ToString());
+
+        for(int n = 0; n < levelArr.Length; n++)
+        {
+            int maxExp = 1;
+            if(n == 0)
+                maxExp = TableManager._instance.Get(eTableType.AccountExpData).ToI(levelArr[n], AccountExpData.Index.Exp.ToString());
+            else
+                maxExp = TableManager._instance.Get(eTableType.FieldExpData).ToI(levelArr[n], FieldExpData.Index.Exp.ToString());
+
+            _levelObjArr[n].InitLevelObj(levelArr[n], expArr[n] / maxExp);
+        }
+
+        _levelArr = levelArr;
+        _expArr = expArr;
     }
 
     public void SelectTab(int index)

@@ -38,10 +38,17 @@ public class BattleUI : MonoBehaviour
     Text _totalFlaskcubeTxt;
     [SerializeField]
     GameObject _cubeSlot;
+    [SerializeField]
+    SelectCard _selectCard;
+    [SerializeField]
+    SelectOtherCard _selectOtherCard;
 #pragma warning restore
 
     Text _reaCardTimeText;
     RotateCard[] _rotateCardArr;
+
+    int _physicsEffectCount;
+    bool _isGameOver;
 
     public bool _IsMyTurn { get; set; }
 
@@ -258,6 +265,8 @@ public class BattleUI : MonoBehaviour
     {
         _rotateCardObj.SetActive(false);
         _projectBoard.gameObject.SetActive(false);
+        _selectCard.gameObject.SetActive(false);
+        _selectOtherCard.gameObject.SetActive(false);
 
         _stateObj[(int)BattleManager.eReadyState.SelectionAction].gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
         _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
@@ -429,9 +438,37 @@ public class BattleUI : MonoBehaviour
         }
     }
 
+    public void GameOver(int selectCount)
+    {
+        _isGameOver = true;
+        _physicsEffectCount = selectCount;
+        _selectFieldObj.SetActive(true);
+    }
+
     public void SelectFieldButton(int field)
     {
         ClientManager._instance.SelectField(field);
+
+        if (_isGameOver && --_physicsEffectCount <= 0)
+            ClientManager._instance.FinishGameOver();
+    }
+
+    public void OpenSelectCard(int[] cardIndex)
+    {
+        _selectCard.gameObject.SetActive(true);
+        _selectCard.OpenSelectCard(cardIndex, "플라스크를 올려둘 카드를 선택하세요.");
+    }
+
+    public void OpenSelectOtherCard(int[] cardIndex)
+    {
+        _selectOtherCard.gameObject.SetActive(true);
+        _selectOtherCard.OpenSelectOtherCard(cardIndex, "플라스크를 올려둘 카드를 선택하세요.");
+    }
+
+    public void ShowInformation(string info)
+    {
+        _informText.text = info;
+        _informText.gameObject.SetActive(true);
     }
 
     public void ExitButton()

@@ -53,6 +53,17 @@ public class ShopUI : MonoBehaviour
         _myItemList.Add(myItem);
     }
 
+    public bool CheckUseItem(int itemIndex)
+    {
+        for(int n = 0; n < _myItemList.Count; n++)
+        {
+            if (_myItemList[n]._MyItemIndex == itemIndex)
+                return true;
+        }
+
+        return false;
+    }
+
     public void ExitButton()
     {
         UIManager._instance.Close(UIManager.eKindWindow.ShopUI);

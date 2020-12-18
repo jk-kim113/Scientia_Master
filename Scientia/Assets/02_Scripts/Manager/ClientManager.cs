@@ -214,7 +214,7 @@ public class ClientManager : TSingleton<ClientManager>
                         {
                             yield return null;
                         }
-                        myInfoUI.InitMyInfo(pMyInfoData._characIndex);
+                        myInfoUI.InitMyInfo(pMyInfoData._characIndex, pMyInfoData._levelArr, pMyInfoData._expArr);
                         myInfoUI.Unlock(pMyInfoData._cardReleaseArr);
 
                         LobbyManager._instance.LoadFinish();
@@ -466,8 +466,11 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_GameOver pGameOver = new DefinedStructure.P_GameOver();
                         pGameOver = (DefinedStructure.P_GameOver)ConvertPacket.ByteArrayToStructure(pToClient._data, pGameOver.GetType(), pToClient._totalSize);
 
-                        //TODO GameOver UI to BattleUI
-                        
+                        if (pGameOver._specificScore == 0)
+                            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowInformation("게임 종료를 처리하는 중");
+                        else
+                            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).GameOver(pGameOver._specificScore);
+
                         break;
 
                     case DefinedProtocol.eToClient.SelectCard:
@@ -485,7 +488,27 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_SelectMyCard pSelectMyCard = new DefinedStructure.P_SelectMyCard();
                         pSelectMyCard = (DefinedStructure.P_SelectMyCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectMyCard.GetType(), pToClient._totalSize);
 
-                        //TODO Show UI
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).OpenSelectCard(pSelectMyCard._cardArr);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.SelectOtherCard:
+
+                        DefinedStructure.P_SelectOtherCard pSelectOtherCard = new DefinedStructure.P_SelectOtherCard();
+                        pSelectOtherCard = (DefinedStructure.P_SelectOtherCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectOtherCard.GetType(), pToClient._totalSize);
+
+                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.SelectCard);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).OpenSelectOtherCard(pSelectOtherCard._cardArr);
+
+                        break;
+
+                    case DefinedProtocol.eToClient.ShowGameResult:
+
+                        DefinedStructure.P_ShowGameResult pShowGameResult = new DefinedStructure.P_ShowGameResult();
+                        pShowGameResult = (DefinedStructure.P_ShowGameResult)ConvertPacket.ByteArrayToStructure(pToClient._data, pShowGameResult.GetType(), pToClient._totalSize);
+
+                        GameResultUI gameresultUI = UIManager._instance.OpenWnd<GameResultUI>(UIManager.eKindWindow.GameResultUI);
+                        
 
                         break;
                     #endregion
@@ -779,6 +802,14 @@ public class ClientManager : TSingleton<ClientManager>
         pPickCard._cardIndex = cardIndex;
 
         ToPacket(DefinedProtocol.eFromClient.SelectCardResult, pPickCard);
+    }
+
+    public void FinishGameOver()
+    {
+        DefinedStructure.P_InformRoomInfo pFinishGameOver;
+        pFinishGameOver._roomNumber = BattleManager._instance._RoomNumber;
+
+        ToPacket(DefinedProtocol.eFromClient.FinishGameOver, pFinishGameOver);
     }
 
     void GetMyCharacterInfo()

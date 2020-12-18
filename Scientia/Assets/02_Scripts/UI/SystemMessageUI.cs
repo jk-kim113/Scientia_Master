@@ -30,7 +30,8 @@ public class SystemMessageUI : MonoBehaviour
         No_CardSlot,
         No_RotatableCard,
         Not_Correct_Select,
-        Fail_Buy_Item
+        Fail_Buy_Item,
+        No_Item
     }
 
 #pragma warning disable 0649

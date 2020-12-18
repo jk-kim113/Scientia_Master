@@ -12,6 +12,8 @@ public enum eTableType
     CardData,
     CardTabData,
     ItemData,
+    AccountExpData,
+    FieldExpData,
 
     max
 }
@@ -53,6 +55,8 @@ public class TableManager : TSingleton<TableManager>
         Load<CardData>(eTableType.CardData);
         Load<CardTabData>(eTableType.CardTabData);
         Load<ItemData>(eTableType.ItemData);
+        Load<AccountExpData>(eTableType.AccountExpData);
+        Load<FieldExpData>(eTableType.FieldExpData);
     }
 
     public TableBase Get(eTableType type)

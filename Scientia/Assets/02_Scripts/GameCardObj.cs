@@ -28,7 +28,15 @@ public class GameCardObj : CardObj, IPointerClickHandler
 
         _cardCount = cardCnt;
 
+        _cardCntText.GetComponentInParent<GameObject>().SetActive(true);
         _cardCntText.text = cardCnt.ToString();
+    }
+
+    public override void InitCard(Sprite img, int index)
+    {
+        base.InitCard(img, index);
+
+        _cardCntText.GetComponentInParent<GameObject>().SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)

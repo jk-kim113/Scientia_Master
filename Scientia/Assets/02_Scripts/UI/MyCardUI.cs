@@ -145,11 +145,12 @@ public class MyCardUI : CardInfoUI, IPointerClickHandler, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        //TODO Item Check
-
-        if (eventData.pointerCurrentRaycast.gameObject.CompareTag("CardUnLockPos"))
+        if(UIManager._instance.GetWnd<ShopUI>(UIManager.eKindWindow.ShopUI).CheckUseItem((_cardIndex / 12) + 1))
         {
-            _currnetCardState = eCardState.UnLocking;
+            if (eventData.pointerCurrentRaycast.gameObject.CompareTag("CardUnLockPos"))
+                _currnetCardState = eCardState.UnLocking;
         }
+        else
+            SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.No_Item);
     }
 }

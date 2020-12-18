@@ -22,6 +22,7 @@ public class BattleCardUI : CardInfoUI, IPointerClickHandler
         {
             _actionButton.onClick.RemoveAllListeners();
             _actionTxt.text = "슬롯에 추가";
+
             if(BattleManager._instance._nowBattleState == BattleManager.eBattleState.Progress)
                 _actionButton.onClick.AddListener(() => AddCardInProgress());
             else

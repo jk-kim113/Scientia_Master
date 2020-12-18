@@ -20,6 +20,7 @@ public class UIManager : TSingleton<UIManager>
         BattleCardUI,
         ShopUI,
         CommunityUI,
+        GameResultUI,
 
         max
     }
