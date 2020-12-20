@@ -9,7 +9,7 @@ public class BattleCardUI : CardInfoUI, IPointerClickHandler
 {
     Text _actionTxt;
 
-    private void Start()
+    private void Awake()
     {
         _actionTxt = _actionButton.GetComponentInChildren<Text>();
     }

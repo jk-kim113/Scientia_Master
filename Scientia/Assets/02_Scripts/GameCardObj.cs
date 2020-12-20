@@ -28,7 +28,7 @@ public class GameCardObj : CardObj, IPointerClickHandler
 
         _cardCount = cardCnt;
 
-        _cardCntText.GetComponentInParent<GameObject>().SetActive(true);
+        _cardCntText.GetComponentInParent<Transform>().gameObject.SetActive(true);
         _cardCntText.text = cardCnt.ToString();
     }
 
@@ -36,7 +36,7 @@ public class GameCardObj : CardObj, IPointerClickHandler
     {
         base.InitCard(img, index);
 
-        _cardCntText.GetComponentInParent<GameObject>().SetActive(false);
+        _cardCntText.GetComponentInParent<Transform>().gameObject.SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)

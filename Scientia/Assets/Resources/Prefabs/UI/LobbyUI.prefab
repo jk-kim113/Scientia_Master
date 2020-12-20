@@ -442,7 +442,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Random_Mode
+  m_Text: Option A
 --- !u!1 &458459109809426423
 GameObject:
   m_ObjectHideFlags: 0
@@ -2935,3 +2935,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roomTr: {fileID: 458459110349852346}
+  _quickEnterMode: {fileID: 458459109699900867}
