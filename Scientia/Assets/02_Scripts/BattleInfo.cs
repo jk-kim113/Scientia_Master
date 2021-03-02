@@ -76,9 +76,7 @@ public class BattleInfo : MonoBehaviour
     public void InitInfo()
     {
         for(int n = 0; n < _skillTrackArr.Length; n++)
-        {
             _skillTrackArr[n].InitSkillCube();
-        }
 
         _skillCubeTxt.text = "x 4";
     }

@@ -203,7 +203,7 @@ public class ClientManager : TSingleton<ClientManager>
                         break;
                     #endregion
 
-                    #region Card
+                    #region MyInfo
                     case DefinedProtocol.eToClient.ShowMyInfo:
                         
                         DefinedStructure.P_MyInfoData pMyInfoData = new DefinedStructure.P_MyInfoData();
@@ -245,8 +245,10 @@ public class ClientManager : TSingleton<ClientManager>
 
                         BattleManager._instance._RoomNumber = pUserInfo._roomNumber;
 
-                        BattleUI battleUI = UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI);
-                        battleUI.ShowUserInfo(pUserInfo._index, pUserInfo._nickName, pUserInfo._accountLevel, pUserInfo._isReady == 0);
+                        if (_currentNickName == pUserInfo._nickName)
+                            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowMyInfo(pUserInfo._index, pUserInfo._nickName, pUserInfo._accountLevel, pUserInfo._isReady == 0);
+                        else
+                            UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowOtherInfo(pUserInfo._index, pUserInfo._nickName, pUserInfo._accountLevel, pUserInfo._isReady == 0);
 
                         break;
 
@@ -293,18 +295,12 @@ public class ClientManager : TSingleton<ClientManager>
                     #endregion
 
                     #region Game Ready
-                    case DefinedProtocol.eToClient.CannotPlay:
-
-                        SystemMessageUI.Open(SystemMessageUI.eSystemMessageType.Error_GameStart);
-
-                        break;
-
                     case DefinedProtocol.eToClient.GameStart:
 
                         DefinedStructure.P_GameStart pGameStart = new DefinedStructure.P_GameStart();
                         pGameStart = (DefinedStructure.P_GameStart)ConvertPacket.ByteArrayToStructure(pToClient._data, pGameStart.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.GameStart);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.ScanCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowTotalSkillCubeCount(pGameStart._skillcubeCnt);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowTotalFlaskCubeCount(pGameStart._flaskcubeCnt);
 
@@ -315,7 +311,6 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_PickedCard pPickedCard = new DefinedStructure.P_PickedCard();
                         pPickedCard = (DefinedStructure.P_PickedCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickedCard.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.ReadCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ShowPickedCard(pPickedCard._pickedCardArr);
 
                         break;
@@ -325,7 +320,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ThisTurn pPickCard = new DefinedStructure.P_ThisTurn();
                         pPickCard = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pPickCard.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.PickCard);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.FirstPickCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).PickCardTurn(pPickCard._index);
 
                         break;
@@ -346,7 +341,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_ThisTurn pChooseAction = new DefinedStructure.P_ThisTurn();
                         pChooseAction = (DefinedStructure.P_ThisTurn)ConvertPacket.ByteArrayToStructure(pToClient._data, pChooseAction.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance._nowBattleState = BattleManager.eBattleState.Progress;
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.SelectAction);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChooseAction(pChooseAction._index);
 
                         break;
@@ -356,6 +351,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_GetCard pGetCard = new DefinedStructure.P_GetCard();
                         pGetCard = (DefinedStructure.P_GetCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pGetCard.GetType(), pToClient._totalSize);
 
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.SelectProjectCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).GetCardState(pGetCard._index);
 
                         break;
@@ -374,6 +370,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_InformRotateCard pInformRotateCard = new DefinedStructure.P_InformRotateCard();
                         pInformRotateCard = (DefinedStructure.P_InformRotateCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pInformRotateCard.GetType(), pToClient._totalSize);
 
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.RotateMyCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).RotateCardState(
                             pInformRotateCard._index, pInformRotateCard._cardArr,
                             pInformRotateCard._cardRotateInfo, pInformRotateCard._turnCount);
@@ -457,6 +454,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_SelectField pSelectField = new DefinedStructure.P_SelectField();
                         pSelectField = (DefinedStructure.P_SelectField)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectField.GetType(), pToClient._totalSize);
 
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.SelectField);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).SelectField(pSelectField._userIndex);
 
                         break;
@@ -478,7 +476,7 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_GetCard pSelectCard = new DefinedStructure.P_GetCard();
                         pSelectCard = (DefinedStructure.P_GetCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectCard.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.SelectCard);
+                        UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).ChangeState(EnumClass.eBattleState.SelectMyCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).SelectCard(pSelectCard._index);
 
                         break;
@@ -497,7 +495,6 @@ public class ClientManager : TSingleton<ClientManager>
                         DefinedStructure.P_SelectOtherCard pSelectOtherCard = new DefinedStructure.P_SelectOtherCard();
                         pSelectOtherCard = (DefinedStructure.P_SelectOtherCard)ConvertPacket.ByteArrayToStructure(pToClient._data, pSelectOtherCard.GetType(), pToClient._totalSize);
 
-                        BattleManager._instance.ReadyStateChange(BattleManager.eReadyState.SelectCard);
                         UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI).OpenSelectOtherCard(pSelectOtherCard._cardArr);
 
                         break;
@@ -679,26 +676,29 @@ public class ClientManager : TSingleton<ClientManager>
         ToPacket(DefinedProtocol.eFromClient.QuickEnter, pQuickEnter);
     }
 
-    public void InformReady()
+    public void InformReady(int myIndex)
     {
         DefinedStructure.P_InformRoomInfo pInformReady;
         pInformReady._roomNumber = BattleManager._instance._RoomNumber;
+        pInformReady._index = myIndex;
 
         ToPacket(DefinedProtocol.eFromClient.InformReady, pInformReady);
     }
 
-    public void InformGameStart()
+    public void InformGameStart(int myIndex)
     {
         DefinedStructure.P_InformRoomInfo pInformGameStart;
         pInformGameStart._roomNumber = BattleManager._instance._RoomNumber;
+        pInformGameStart._index = myIndex;
 
         ToPacket(DefinedProtocol.eFromClient.InformGameStart, pInformGameStart);
     }
 
-    public void FinishReadCard()
+    public void FinishReadCard(int myIndex)
     {
         DefinedStructure.P_InformRoomInfo pFinishReadCard;
         pFinishReadCard._roomNumber = BattleManager._instance._RoomNumber;
+        pFinishReadCard._index = myIndex;
 
         ToPacket(DefinedProtocol.eFromClient.FinishReadCard, pFinishReadCard);
     }
@@ -808,6 +808,7 @@ public class ClientManager : TSingleton<ClientManager>
     {
         DefinedStructure.P_InformRoomInfo pFinishGameOver;
         pFinishGameOver._roomNumber = BattleManager._instance._RoomNumber;
+        pFinishGameOver._index = 0;
 
         ToPacket(DefinedProtocol.eFromClient.FinishGameOver, pFinishGameOver);
     }

@@ -99,6 +99,8 @@ public class DefinedStructure
     {
         [MarshalAs(UnmanagedType.I4)]
         public int _roomNumber;
+        [MarshalAs(UnmanagedType.I4)]
+        public int _index;
     }
 
     [StructLayout(LayoutKind.Sequential)]

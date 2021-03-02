@@ -5,46 +5,43 @@ using UnityEngine.UI;
 
 public class BattleUI : MonoBehaviour
 {
-    public enum eActionKind
-    {
-        GetCard,
-        RotateCard
-    }
-
 #pragma warning disable 0649
     [SerializeField]
-    BattleInfo[] _userInfoArr;
-    [SerializeField]
-    GameObject[] _stateObj;
-    [SerializeField]
-    Button _actionBtn;
-    [SerializeField]
-    ProjectBoard _projectBoard;
-    [SerializeField]
-    CardSlot[] _cardSlotArr;
-    [SerializeField]
-    Text _informText;
+    GameObject _gameWaitObj;
     [SerializeField]
     GameObject _rotateCardObj;
     [SerializeField]
-    Text _turnCntText;
+    BattleInfo[] _userInfoArr;
     [SerializeField]
-    Button _rotateOkButton;
-    [SerializeField]
-    GameObject _selectFieldObj;
+    ProjectBoard _projectBoard;
     [SerializeField]
     Text _totalSkillcubeCntTxt;
     [SerializeField]
     Text _totalFlaskcubeTxt;
     [SerializeField]
+    Text _reaCardTimeText;
+    [SerializeField]
+    GameObject _playerCardSlot;
+    [SerializeField]
     GameObject _cubeSlot;
+    [SerializeField]
+    GameObject _selectActionObj;
+    [SerializeField]
+    Button _rotateOkButton;
+    [SerializeField]
+    CardSlot[] _cardSlotArr;
+    [SerializeField]
+    Text _informText;
+    [SerializeField]
+    Text _turnCntText;
+    [SerializeField]
+    GameObject _selectFieldObj;
     [SerializeField]
     SelectCard _selectCard;
     [SerializeField]
     SelectOtherCard _selectOtherCard;
 #pragma warning restore
 
-    Text _reaCardTimeText;
     RotateCard[] _rotateCardArr;
 
     int _physicsEffectCount;
@@ -66,6 +63,7 @@ public class BattleUI : MonoBehaviour
         {
             _currentTurn = value;
             _turnCntText.text = "남은 회전 횟수 : " + _RestTurnCnt.ToString();
+            Debug.Log(_RestTurnCnt);
         }
     }
     
@@ -73,110 +71,231 @@ public class BattleUI : MonoBehaviour
 
     int _selectComplete = -1;
 
+    Button _actionBtn;
+    Text _actionText;
+    EnumClass.eBattleState _currentBattleState;
+    public EnumClass.eBattleState _NowBattleState { get { return _currentBattleState; } }
+    float _readTimeCount;
+
     private void Start()
     {
-        _reaCardTimeText = _stateObj[(int)BattleManager.eReadyState.ReadCard].GetComponentInChildren<Text>();
         _rotateCardArr = _rotateCardObj.GetComponentsInChildren<RotateCard>();
+
+        _actionBtn = _gameWaitObj.GetComponentsInChildren<Button>()[0];
+        _actionText = _actionBtn.GetComponentInChildren<Text>();
+        InitState(EnumClass.eBattleState.BattleWait);
     }
 
-    public void StateChange(BattleManager.eReadyState state)
+    private void Update()
     {
-        switch(state)
+        if(_currentBattleState == EnumClass.eBattleState.ScanCard)
         {
-            case BattleManager.eReadyState.GameWait:
-            case BattleManager.eReadyState.ReadCard:
-            case BattleManager.eReadyState.PickCard:
+            _readTimeCount -= Time.deltaTime;
 
-                for (int n = 0; n < _stateObj.Length; n++)
-                    _stateObj[n].SetActive((int)state == n);
-
-                break;
-
-            case BattleManager.eReadyState.DoingAction:
-            case BattleManager.eReadyState.WaitServer:
-
-                for (int n = 0; n < _stateObj.Length; n++)
-                {
-                    if(_stateObj[n].activeSelf)
-                        _stateObj[n].SetActive(false);
-                }
-
-                break;
-
-            case BattleManager.eReadyState.GameStart:
-
-                _cubeSlot.SetActive(true);
-                AllReadyCancel();
-                InitBattleInfo();
-                ShowTotalSkillCubeCount(4);
-                ShowTotalFlaskCubeCount(0);
-
-                break;
-        }
-    }
-
-    void InitBattleInfo()
-    {
-        for(int n = 0; n < _userInfoArr.Length; n++)
-        {
-            if (!_userInfoArr[n]._IsEmpty)
-                _userInfoArr[n].InitInfo();
-        }
-    }
-
-    public void ShowUserInfo(int index, string nickName, int level, bool isReady)
-    {
-        if(ClientManager._instance._NowNickName == nickName)
-        {
-            _userInfoArr[0].ShowInfo(index, nickName, level, isReady);
-        }
-        else
-        {
-            for(int n = 1; n < 4; n++)
+            if (_readTimeCount < 0)
             {
-                if(_userInfoArr[n]._IsEmpty)
-                {
-                    _userInfoArr[n].ShowInfo(index, nickName, level, isReady);
-                    return;
-                }
+                ChangeState(EnumClass.eBattleState.FirstPickCard);
+                ClientManager._instance.FinishReadCard(_userInfoArr[0]._MyIndex);
             }
+
+            _reaCardTimeText.text = _readTimeCount.ToString("N0");
         }
     }
 
-    public void ShowMaster(int masterIndex)
+    void InitState(EnumClass.eBattleState battlestate)
     {
-        for(int n = 0; n < _userInfoArr.Length; n++)
+        _currentBattleState = battlestate;
+
+        EnterState(_currentBattleState);
+    }
+
+    public void ChangeState(EnumClass.eBattleState battlestate)
+    {
+        ExitState(_currentBattleState);
+
+        _currentBattleState = battlestate;
+
+        EnterState(_currentBattleState);
+    }
+
+    void EnterState(EnumClass.eBattleState battlestate)
+    {
+        Debug.Log(string.Format("{0} 상태 입장", battlestate.ToString()));
+        switch (battlestate)
         {
-            if (_userInfoArr[n]._MyIndex == masterIndex)
-                _userInfoArr[n].ShowMaster(true);
-            else
-                _userInfoArr[n].ShowMaster(false);
+            case EnumClass.eBattleState.BattleWait:
+
+                _gameWaitObj.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.ScanCard:
+
+                InitBattleInfo();
+                _readTimeCount = 5;
+                _projectBoard.gameObject.SetActive(true);
+                _reaCardTimeText.gameObject.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.FirstPickCard:
+
+                _projectBoard.gameObject.SetActive(true);
+                _playerCardSlot.SetActive(true);
+                _cubeSlot.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.SelectAction:
+
+                _playerCardSlot.SetActive(true);
+                _cubeSlot.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.SelectProjectCard:
+
+                _projectBoard.gameObject.SetActive(true);
+                _playerCardSlot.SetActive(true);
+                _cubeSlot.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.RotateMyCard:
+
+                _rotateCardObj.SetActive(true);
+                _playerCardSlot.SetActive(true);
+                _cubeSlot.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.SelectMyCard:
+
+                _projectBoard.gameObject.SetActive(true);
+                _playerCardSlot.SetActive(true);
+                _cubeSlot.SetActive(true);
+
+                break;
+
+            case EnumClass.eBattleState.SelectField:
+
+                break;
         }
+    }
 
-        _actionBtn.GetComponentInChildren<Text>().text = _userInfoArr[0]._MyIndex == masterIndex ? "시작하기" : "준비하기";
+    void ExitState(EnumClass.eBattleState battlestate)
+    {
+        Debug.Log(string.Format("{0} 상태 퇴장", battlestate.ToString()));
+        switch (battlestate)
+        {
+            case EnumClass.eBattleState.BattleWait:
 
-        _actionBtn.onClick.RemoveAllListeners();
-        if (_userInfoArr[0]._MyIndex == masterIndex)
-            _actionBtn.onClick.AddListener(() => { InformGameStart(); });
-        else
-            _actionBtn.onClick.AddListener(() => { InformGameReady(); });
+                _gameWaitObj.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.ScanCard:
+
+                _projectBoard.gameObject.SetActive(false);
+                _reaCardTimeText.gameObject.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.FirstPickCard:
+
+                _projectBoard.gameObject.SetActive(false);
+                _playerCardSlot.SetActive(false);
+                _cubeSlot.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.SelectAction:
+
+                _selectActionObj.SetActive(false);
+                _playerCardSlot.SetActive(false);
+                _cubeSlot.SetActive(false);
+                _informText.gameObject.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.SelectProjectCard:
+
+                _projectBoard.gameObject.SetActive(false);
+                _playerCardSlot.SetActive(false);
+                _cubeSlot.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.RotateMyCard:
+
+                _rotateCardObj.SetActive(false);
+                _playerCardSlot.SetActive(false);
+                _cubeSlot.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.SelectMyCard:
+
+                _projectBoard.gameObject.SetActive(false);
+                _playerCardSlot.SetActive(false);
+                _cubeSlot.SetActive(false);
+
+                break;
+
+            case EnumClass.eBattleState.SelectField:
+
+                _informText.gameObject.SetActive(false);
+                _selectFieldObj.SetActive(false);
+
+                break;
+        }
     }
 
     void InformGameStart()
     {
-        ClientManager._instance.InformGameStart();
+        ClientManager._instance.InformGameStart(_userInfoArr[0]._MyIndex);
     }
 
     void InformGameReady()
     {
-        ClientManager._instance.InformReady();
+        ClientManager._instance.InformReady(_userInfoArr[0]._MyIndex);
+    }
+
+    void InitBattleInfo()
+    {
+        for (int n = 0; n < _userInfoArr.Length; n++)
+        {
+            if (!_userInfoArr[n]._IsEmpty)
+            {
+                _userInfoArr[n].InitInfo();
+                _userInfoArr[n].ReadyState(false);
+            }
+                
+        }
+    }
+
+    public void ShowMyInfo(int index, string nickName, int level, bool isReady)
+    {
+        _userInfoArr[0].ShowInfo(index, nickName, level, isReady);
+    }
+
+    public void ShowOtherInfo(int index, string nickName, int level, bool isReady)
+    {
+        for (int n = 1; n < 4; n++)
+        {
+            if (_userInfoArr[n]._IsEmpty)
+            {
+                _userInfoArr[n].ShowInfo(index, nickName, level, isReady);
+                return;
+            }
+        }
     }
 
     public void ShowReadyUser(int index, bool isReady)
     {
-        for(int n = 0; n < _userInfoArr.Length; n++)
+        for (int n = 0; n < _userInfoArr.Length; n++)
         {
-            if(_userInfoArr[n]._MyIndex == index)
+            if (_userInfoArr[n]._MyIndex == index)
             {
                 _userInfoArr[n].ReadyState(isReady);
 
@@ -185,24 +304,23 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    void AllReadyCancel()
+    public void ShowMaster(int masterIndex)
     {
-        for(int n = 0; n < _userInfoArr.Length; n++)
+        for (int n = 0; n < _userInfoArr.Length; n++)
         {
-            _userInfoArr[n].ReadyState(false);
+            if (_userInfoArr[n]._MyIndex == masterIndex)
+                _userInfoArr[n].ShowMaster(true);
+            else
+                _userInfoArr[n].ShowMaster(false);
         }
-    }
 
-    public void ShowUserSkillCubeCount(int index, int skillcube, int field, int[] skillPos)
-    {
-        if (_userInfoArr[index] != null)
-            _userInfoArr[index].ShowSkillCube(skillcube, field, skillPos);
-    }
+        _actionText.text = _userInfoArr[0]._MyIndex == masterIndex ? "시작하기" : "준비하기";
 
-    public void ShowUserFlaskCubeCount(int index, int flaskcube)
-    {
-        if (_userInfoArr[index] != null)
-            _userInfoArr[index].ShowFlaskCube(flaskcube);
+        _actionBtn.onClick.RemoveAllListeners();
+        if (_userInfoArr[0]._MyIndex == masterIndex)
+            _actionBtn.onClick.AddListener(() => { InformGameStart(); });
+        else
+            _actionBtn.onClick.AddListener(() => { InformGameReady(); });
     }
 
     public void ShowTotalSkillCubeCount(int skillcube)
@@ -216,34 +334,19 @@ public class BattleUI : MonoBehaviour
     }
 
     public void ShowPickedCard(int[] pickedCardArr)
-    {   
+    {
         _projectBoard.ShowPickedCard(pickedCardArr);
-    }
-
-    public void RenewProjectBoard(int cardIndex, int cardCount)
-    {
-        _projectBoard.RenewCard(cardIndex, cardCount);
-    }
-
-    public void ShowReadCardTime(int time)
-    {
-        _reaCardTimeText.text = time.ToString();
     }
 
     public void PickCardTurn(int index)
     {
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
 
-        for(int n = 0; n < _cardSlotArr.Length; n++)
+        for (int n = 0; n < _cardSlotArr.Length; n++)
             _cardSlotArr[n].ShowTurn(n == index);
 
-        for(int n = 0; n < _userInfoArr.Length; n++)
-        {
-            if (_userInfoArr[n]._MyIndex == index)
-                _userInfoArr[n].ShowTurn(true);
-            else
-                _userInfoArr[n].ShowTurn(false);
-        }
+        for (int n = 0; n < _userInfoArr.Length; n++)
+            _userInfoArr[n].ShowTurn(_userInfoArr[n]._MyIndex == index);
     }
 
     public void ShowAddCard(int index, int slotIndex, int cardIndex)
@@ -251,24 +354,9 @@ public class BattleUI : MonoBehaviour
         _cardSlotArr[index].ShowAddCard(slotIndex, cardIndex);
     }
 
-    public void DeleteCard(int index, int slotIndex)
-    {
-        _cardSlotArr[index].DeleteCard(slotIndex);
-    }
-
-    public void OpenCardSlot(int index, int unLockSlot)
-    {
-        _cardSlotArr[index].Open(unLockSlot);
-    }
-
     public void ChooseAction(int index)
     {
-        _rotateCardObj.SetActive(false);
-        _projectBoard.gameObject.SetActive(false);
-        _selectCard.gameObject.SetActive(false);
-        _selectOtherCard.gameObject.SetActive(false);
-
-        _stateObj[(int)BattleManager.eReadyState.SelectionAction].gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+        _selectActionObj.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
         _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
         _informText.text = "행동 선택중...";
 
@@ -277,27 +365,21 @@ public class BattleUI : MonoBehaviour
 
     public void GetCardAction()
     {
-        ClientManager._instance.SelectAction((int)eActionKind.GetCard);
+        ClientManager._instance.SelectAction((int)EnumClass.eActionKind.GetCard);
     }
 
     public void RotateCardAction()
     {
-        ClientManager._instance.SelectAction((int)eActionKind.RotateCard);
+        ClientManager._instance.SelectAction((int)EnumClass.eActionKind.RotateCard);
     }
 
-    public void SelectCard(int index)
+    public void RenewProjectBoard(int cardIndex, int cardCount)
     {
-        _IsMyTurn = _userInfoArr[0]._MyIndex == index;
-
-        _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
-
-        _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
-        _informText.text = "카드 고르는중...";
+        _projectBoard.RenewCard(cardIndex, cardCount);
     }
 
     public void GetCardState(int index)
     {
-        StateChange(BattleManager.eReadyState.PickCard);
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
 
         _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
@@ -312,18 +394,14 @@ public class BattleUI : MonoBehaviour
         _rotateOkButton.onClick.RemoveAllListeners();
         _rotateOkButton.onClick.AddListener(() => { FinishRotateCard(); });
 
-        StateChange(BattleManager.eReadyState.DoingAction);
-        _informText.gameObject.SetActive(false);
         _IsMyTurn = _userInfoArr[0]._MyIndex == index;
         _turnCount = turnCount;
         _NowTurn = 0;
         _currentTurn = 0;
 
-        _rotateCardObj.SetActive(true);
-
-        for(int n = 0; n < _rotateCardArr.Length; n++)
+        for (int n = 0; n < _rotateCardArr.Length; n++)
         {
-            switch(cardState[n])
+            switch (cardState[n])
             {
                 case 0:
 
@@ -340,7 +418,7 @@ public class BattleUI : MonoBehaviour
                 default:
 
                     _rotateCardArr[n].InitCard(
-                        ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(cardState[n], "Name")), 
+                        ResourcePoolManager._instance.GetObj<Sprite>(ResourcePoolManager.eResourceKind.Image, TableManager._instance.Get(eTableType.CardData).ToS(cardState[n], "Name")),
                         RotateCard.eCardType.Rotatable, n, cardRotateInfo[n]);
 
                     break;
@@ -350,7 +428,7 @@ public class BattleUI : MonoBehaviour
 
     public void FinishRotateCard()
     {
-        if(_turnCount == 0)
+        if (_turnCount == 0)
         {
             //TODO System Message Rotate at least one more
 
@@ -364,9 +442,22 @@ public class BattleUI : MonoBehaviour
         ClientManager._instance.FinishRotateCard(rotateCnt);
     }
 
+    public void ClickCompleteCard(int index)
+    {
+        if (_selectComplete == index)
+            return;
+
+        _selectComplete = index;
+
+        for (int n = 0; n < _rotateCardArr.Length; n++)
+        {
+            _rotateCardArr[n].ShowClick(n == index);
+        }
+    }
+
     public void ShowRotate(int index, float rotateValue, int restCnt)
     {
-        if(!_IsMyTurn)
+        if (!_IsMyTurn)
             _rotateCardArr[index].SetRotation(rotateValue);
 
         _turnCntText.text = "남은 회전 횟수 : " + restCnt.ToString();
@@ -385,9 +476,9 @@ public class BattleUI : MonoBehaviour
 
         if (_userInfoArr[0]._MyIndex == index)
         {
-            for(int n = 0; n < _rotateCardArr.Length; n++)
+            for (int n = 0; n < _rotateCardArr.Length; n++)
             {
-                if(completeCard[n] > 0)
+                if (completeCard[n] > 0)
                 {
                     _rotateCardArr[n].gameObject.SetActive(true);
                     _rotateCardArr[n].InitCard(
@@ -402,19 +493,6 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void ClickCompleteCard(int index)
-    {
-        if (_selectComplete == index)
-            return;
-
-        _selectComplete = index;
-
-        for (int n = 0; n < _rotateCardArr.Length; n++)
-        {
-            _rotateCardArr[n].ShowClick(n == index);
-        }
-    }
-
     public void ChooseCompleteCard()
     {
         if (_selectComplete < 0)
@@ -425,9 +503,41 @@ public class BattleUI : MonoBehaviour
             ClientManager._instance.ChooseCompleteCard(_selectComplete);
     }
 
+    public void ShowUserSkillCubeCount(int index, int skillcube, int field, int[] skillPos)
+    {
+        if (_userInfoArr[index] != null)
+            _userInfoArr[index].ShowSkillCube(skillcube, field, skillPos);
+    }
+
+    public void ShowUserFlaskCubeCount(int index, int flaskcube)
+    {
+        if (_userInfoArr[index] != null)
+            _userInfoArr[index].ShowFlaskCube(flaskcube);
+    }
+
+    public void DeleteCard(int index, int slotIndex)
+    {
+        _cardSlotArr[index].DeleteCard(slotIndex);
+    }
+
+    public void OpenCardSlot(int index, int unLockSlot)
+    {
+        _cardSlotArr[index].Open(unLockSlot);
+    }
+
+    public void SelectCard(int index)
+    {
+        _IsMyTurn = _userInfoArr[0]._MyIndex == index;
+
+        _projectBoard.gameObject.SetActive(_userInfoArr[0]._MyIndex == index);
+
+        _informText.gameObject.SetActive(_userInfoArr[0]._MyIndex != index);
+        _informText.text = "카드 고르는중...";
+    }
+
     public void SelectField(int userIndex)
     {
-        if(_userInfoArr[0]._MyIndex != userIndex)
+        if (_userInfoArr[0]._MyIndex != userIndex)
         {
             _informText.text = "분야 선택하는 중...";
             _informText.gameObject.SetActive(true);
@@ -471,8 +581,8 @@ public class BattleUI : MonoBehaviour
         _informText.gameObject.SetActive(true);
     }
 
-    public void ExitButton()
-    {
-        //TODO Send Packet To Server
-    }
+    //public void ExitButton()
+    //{
+    //    //TODO Send Packet To Server
+    //}
 }

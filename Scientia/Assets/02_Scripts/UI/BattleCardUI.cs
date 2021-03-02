@@ -21,18 +21,29 @@ public class BattleCardUI : CardInfoUI, IPointerClickHandler
         if (UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._IsMyTurn)
         {
             _actionButton.onClick.RemoveAllListeners();
-            _actionTxt.text = "슬롯에 추가";
 
-            if(BattleManager._instance._nowBattleState == BattleManager.eBattleState.Progress)
-                _actionButton.onClick.AddListener(() => AddCardInProgress());
-            else
-                _actionButton.onClick.AddListener(() => AddToCardSlot());
-
-            if (BattleManager._instance._nowReadyState == BattleManager.eReadyState.SelectCard)
+            switch (UIManager._instance.GetWnd<BattleUI>(UIManager.eKindWindow.BattleUI)._NowBattleState)
             {
-                _actionButton.onClick.RemoveAllListeners();
-                _actionTxt.text = "카드 선택";
-                _actionButton.onClick.AddListener(() => SelectCardResult());
+                case EnumClass.eBattleState.FirstPickCard:
+
+                    _actionTxt.text = "슬롯에 추가";
+                    _actionButton.onClick.AddListener(() => AddToCardSlot());
+
+                    break;
+
+                case EnumClass.eBattleState.SelectProjectCard:
+
+                    _actionTxt.text = "슬롯에 추가";
+                    _actionButton.onClick.AddListener(() => AddCardInProgress());
+
+                    break;
+
+                case EnumClass.eBattleState.SelectMyCard:
+
+                    _actionTxt.text = "카드 선택";
+                    _actionButton.onClick.AddListener(() => SelectCardResult());
+
+                    break;
             }
 
             _actionButton.gameObject.SetActive(true);
